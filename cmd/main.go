@@ -17,7 +17,6 @@ func main() {
 	}
 
 	logger := logger.NewStdLogger()
-	logger.Info("storage created", "type", cfg.ServerType)
 
 	client, err := server.NewClient(cfg.ServerType, logger)
 	if err != nil {
@@ -29,5 +28,7 @@ func main() {
 		logger.Fatal("failed to health check", "error", err)
 	}
 	logger.Info("health check passed")
+	logger.Info("client created", "type", cfg.ServerType)
 
+	select {}
 }

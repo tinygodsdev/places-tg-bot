@@ -5,7 +5,8 @@ import (
 )
 
 type Config struct {
-	ServerType string `envconfig:"SERVER_TYPE" required:"true"`
+	ServerType    string `envconfig:"SERVER_TYPE" required:"true"`
+	TelegramToken string `envconfig:"TELEGRAM_TOKEN" required:"true"`
 }
 
 func LoadConfig() (*Config, error) {

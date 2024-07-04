@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"time"
 
+	"github.com/tinygodsdev/datasdk/pkg/data"
 	"github.com/tinygodsdev/datasdk/pkg/logger"
 	"github.com/tinygodsdev/datasdk/pkg/server"
 	"github.com/tinygodsdev/places-tg-bot/internal/config"
@@ -30,5 +33,19 @@ func main() {
 	logger.Info("health check passed")
 	logger.Info("client created", "type", cfg.ServerType)
 
-	select {}
+	for {
+		points, err := client.GetPoints(ctx,
+			data.Filter{},
+			data.Group{
+				TagLabels: []string{"city"},
+			},
+		)
+		if err != nil {
+			logger.Error("failed to get points", "error", err)
+		}
+
+		fmt.Printf("points: %+v\n", points)
+
+		time.Sleep(120 * time.Minute)
+	}
 }

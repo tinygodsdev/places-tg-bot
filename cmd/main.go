@@ -28,14 +28,13 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to health check", "error", err)
 	}
-	logger.Info("health check passed")
-	logger.Info("client created", "type", cfg.ServerType)
+	logger.Info("client created", "type", cfg.ServerType, "info", "health check passed")
 
 	b, err := bot.New(cfg, client, logger)
 	if err != nil {
 		logger.Fatal("failed to create bot", "error", err)
 	}
-	logger.Info("bot is connected")
+	logger.Info("connected to telegram")
 
 	defer b.Stop()
 	b.Start()

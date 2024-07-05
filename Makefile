@@ -22,5 +22,5 @@ deploy:
 
 .PHONY: deps
 deps:
-	go get github.com/tinygodsdev/datasdk/pkg/server
+	go get github.com/tinygodsdev/datasdk
 	go mod tidy

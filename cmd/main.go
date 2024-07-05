@@ -35,6 +35,7 @@ func main() {
 	if err != nil {
 		logger.Fatal("failed to create bot", "error", err)
 	}
+	logger.Info("bot is connected")
 
 	defer b.Stop()
 	b.Start()

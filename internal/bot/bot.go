@@ -101,7 +101,7 @@ func (b *Bot) handleReport(c tele.Context) error {
 		"Here is the data:",
 		strings.Join(cityReports, "\n\n"),
 		sourcesReport,
-		fmt.Sprintf("Fetched in %s", time.Since(start)),
+		FormatFetchDuration(time.Since(start)),
 	}, "\n\n")
-	return c.Send(report)
+	return c.Send(report, &tele.SendOptions{ParseMode: tele.ModeHTML})
 }

@@ -94,14 +94,11 @@ func (b *Bot) handleReport(c tele.Context) error {
 		}
 	}
 
-	sourcesReport := FormatSources(sources)
-
 	cityReports := FormatCitiesReport(points)
 	report := strings.Join([]string{
 		"Here is the data:",
 		strings.Join(cityReports, "\n\n"),
-		sourcesReport,
-		FormatFetchDuration(time.Since(start)),
+		FormatMessageFooter(sources, start),
 	}, "\n\n")
 	return c.Send(report, &tele.SendOptions{ParseMode: tele.ModeHTML})
 }

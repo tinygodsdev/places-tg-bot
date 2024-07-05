@@ -56,6 +56,10 @@ func FormatCitiesReport(points []data.Point) []string {
 }
 
 func FormatSources(sources []data.Source) string {
+	if len(sources) == 0 {
+		return ""
+	}
+
 	uniqueNames := make(map[string]struct{})
 	for _, source := range sources {
 		uniqueNames[source.Name] = struct{}{}
@@ -71,7 +75,23 @@ func FormatSources(sources []data.Source) string {
 }
 
 func FormatFetchDuration(d time.Duration) string {
+	if d == 0 {
+		return ""
+	}
+
 	return italic(fmt.Sprintf("Fetched in %s", d))
+}
+
+func FormatProvider() string {
+	return "By " + underline("tinygods.dev")
+}
+
+func FormatMessageFooter(sources []data.Source, startTime time.Time) string {
+	return strings.Join([]string{
+		FormatSources(sources),
+		FormatFetchDuration(time.Since(startTime)),
+		"\n" + FormatProvider(),
+	}, "\n")
 }
 
 func getCityFromTags(tags []data.Tag) string {

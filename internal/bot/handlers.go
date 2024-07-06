@@ -66,11 +66,21 @@ func (b *Bot) handleCities(c tele.Context) error {
 		OneTimeKeyboard: true,
 	}
 
+	const buttonsPerRow = 3
 	var btns []tele.Btn
 	for _, city := range cities {
 		btns = append(btns, r.Data(capitalize(city), callbackCity, city))
 	}
-	r.Inline(r.Row(btns...))
+
+	var rows []tele.Row
+	for i := 0; i < len(btns); i += buttonsPerRow {
+		end := i + buttonsPerRow
+		if end > len(btns) {
+			end = len(btns)
+		}
+		rows = append(rows, r.Row(btns[i:end]...))
+	}
+	r.Inline(rows...)
 
 	return c.Send("Choose a city to get report:", &tele.SendOptions{
 		ReplyMarkup: r,

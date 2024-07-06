@@ -1,6 +1,7 @@
 package bot
 
 import (
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,11 +15,14 @@ const (
 	CommandStart  = "/start"
 	CommandReport = "/report"
 	CommandCities = "/cities"
+	CommandHelp   = "/help"
 
 	TagCategory = "category"
 	TagCity     = "city"
 
 	callbackCity = "city_callback"
+
+	botBioEn = "Insights on cities with large Russian expat communities. Perfect for potential movers or the curious!"
 )
 
 type Bot struct {
@@ -26,6 +30,7 @@ type Bot struct {
 	placesClient server.Client
 	log          logger.Logger
 	t            *tele.Bot
+	commands     []tele.Command
 }
 
 func New(cfg *config.Config, placesClient server.Client, l logger.Logger) (*Bot, error) {
@@ -39,11 +44,18 @@ func New(cfg *config.Config, placesClient server.Client, l logger.Logger) (*Bot,
 		return nil, err
 	}
 
+	var commands []tele.Command = []tele.Command{
+		{Text: CommandStart, Description: "Start the bot"},
+		{Text: CommandCities, Description: "Get available cities list"},
+		{Text: CommandHelp, Description: "Get bot instructions"},
+	}
+
 	b := &Bot{
 		cfg:          cfg,
 		placesClient: placesClient,
 		t:            t,
 		log:          l,
+		commands:     commands,
 	}
 
 	b.linkHandlers()
@@ -51,12 +63,23 @@ func New(cfg *config.Config, placesClient server.Client, l logger.Logger) (*Bot,
 }
 
 func (b *Bot) Setup() error {
-	b.t.SetCommands([]tele.Command{
-		{Text: CommandStart, Description: "Start the bot"},
-		{Text: CommandReport, Description: "Get report on all available cities"},
-		{Text: CommandCities, Description: "Get available cities list"},
-		// TODO: add help and settings commands
-	})
+	b.log.Info("setting commands")
+	err := b.t.SetCommands(b.commands)
+	if err != nil {
+		return err
+	}
+
+	b.log.Info("setting in-chat description")
+	err = b.t.SetMyDescription(b.getHelpMessage(), "en")
+	if err != nil {
+		return err
+	}
+
+	b.log.Info("setting bio")
+	err = b.t.SetMyShortDescription(botBioEn, "en")
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -71,8 +94,9 @@ func (b *Bot) Stop() {
 
 func (b *Bot) linkHandlers() {
 	b.t.Handle(CommandStart, b.getHandler(b.handleStart))
-	b.t.Handle(CommandReport, b.getHandler(b.handleReport))
 	b.t.Handle(CommandCities, b.getHandler(b.handleCities))
+	b.t.Handle(CommandHelp, b.getHandler(b.handleHelp))
+	b.t.Handle(CommandReport, b.getHandler(b.handleReport)) // TODO: remove or replace
 
 	// callbacks
 	b.t.Handle(&tele.InlineButton{Unique: callbackCity}, b.getHandler(b.handleCitiesCallback))
@@ -104,4 +128,12 @@ func (b *Bot) getHandler(fn func(tele.Context) error) tele.HandlerFunc {
 		}()
 		return fn(c)
 	}
+}
+
+func (b *Bot) getHelpMessage() string {
+	return strings.Join([]string{
+		botBioEn,
+		FormatCommands(b.commands),
+		FormatDeveloperPlain(),
+	}, "\n\n")
 }

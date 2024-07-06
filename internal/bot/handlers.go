@@ -9,7 +9,11 @@ import (
 )
 
 func (b *Bot) handleStart(c tele.Context) error {
-	return c.Send("Hello! I'm a bot that can help you find places!")
+	return b.handleHelp(c)
+}
+
+func (b *Bot) handleHelp(c tele.Context) error {
+	return c.Send(b.getHelpMessage())
 }
 
 func (b *Bot) handleReport(c tele.Context) error {

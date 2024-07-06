@@ -11,6 +11,7 @@ import (
 	"unicode"
 
 	"github.com/tinygodsdev/datasdk/pkg/data"
+	tele "gopkg.in/telebot.v3"
 )
 
 const (
@@ -63,16 +64,23 @@ const (
 	catergoryWeather    = "weather"
 	catergoryAirQuality = "air_quality"
 	categoryWorldBank   = "world_bank"
+
+	// provider
+	provider = "tinygods.dev"
 )
+
+var categoryOrder = []string{catergoryWeather, catergoryAirQuality, categoryWorldBank}
 
 func FormatCitiesReport(points []data.Point) []string {
 	groupedData := groupDataByCityAndCategory(points)
 	var messages []string
 	for city, categories := range groupedData {
 		messages = append(messages, bold(upper(city)))
-		for category, attrs := range categories {
-			messages = append(messages, formatCatergoryTitle(category))
-			messages = append(messages, formatCityAttributes(attrs))
+		for _, category := range categoryOrder {
+			if attrs, exists := categories[category]; exists {
+				messages = append(messages, formatCatergoryTitle(category))
+				messages = append(messages, formatCityAttributes(attrs))
+			}
 		}
 	}
 	return messages
@@ -102,7 +110,11 @@ func FormatFetchDuration(d time.Duration) string {
 }
 
 func FormatProvider() string {
-	return "By " + underline("tinygods.dev")
+	return "By " + underline(provider)
+}
+
+func FormatDeveloperPlain() string {
+	return "Developed by " + provider
 }
 
 func FormatMessageFooter(sources []data.Source, startTime time.Time) string {
@@ -253,7 +265,7 @@ func formatCatergoryTitle(category string) string {
 	case catergoryAirQuality:
 		return underline("Air Quality") + " " + airEmoji
 	case categoryWorldBank:
-		return underline("Economy") + " " + stonksEmoji
+		return underline("National Economy") + " " + stonksEmoji
 	default:
 		return capitalize(category)
 	}
@@ -268,6 +280,17 @@ func FormatCityList(cities []string) string {
 	}
 
 	return strings.Join(formattedCities, ", ")
+}
+
+func FormatCommands(commands []tele.Command) string {
+	var formattedCommands []string
+	for _, c := range commands {
+		formattedCommands = append(formattedCommands,
+			fmt.Sprintf("%s - %s", c.Text, c.Description),
+		)
+	}
+
+	return strings.Join(formattedCommands, "\n")
 }
 
 func groupDataByCityAndCategory(points []data.Point) map[string]map[string][]data.Attribute {

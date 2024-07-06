@@ -98,10 +98,6 @@ func FormatSources(sources []data.Source) string {
 }
 
 func FormatFetchDuration(d time.Duration) string {
-	if d == 0 {
-		return ""
-	}
-
 	return italic(fmt.Sprintf("Fetched in %s", d))
 }
 
@@ -110,11 +106,17 @@ func FormatProvider() string {
 }
 
 func FormatMessageFooter(sources []data.Source, startTime time.Time) string {
-	return strings.Join([]string{
-		FormatSources(sources),
-		FormatFetchDuration(time.Since(startTime)),
-		"\n" + FormatProvider(),
-	}, "\n")
+	var res []string
+	if len(sources) != 0 {
+		res = append(res, FormatSources(sources))
+	}
+
+	if !startTime.IsZero() {
+		res = append(res, FormatFetchDuration(time.Since(startTime)))
+	}
+
+	res = append(res, FormatProvider())
+	return strings.Join(res, "\n")
 }
 
 func formatCityAttributes(attributes []data.Attribute) string {
@@ -255,6 +257,17 @@ func formatCatergoryTitle(category string) string {
 	default:
 		return capitalize(category)
 	}
+}
+
+func FormatCityList(cities []string) string {
+	var formattedCities []string
+	for _, c := range cities {
+		formattedCities = append(formattedCities,
+			capitalize(c),
+		)
+	}
+
+	return strings.Join(formattedCities, ", ")
 }
 
 func groupDataByCityAndCategory(points []data.Point) map[string]map[string][]data.Attribute {

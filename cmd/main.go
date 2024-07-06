@@ -36,6 +36,11 @@ func main() {
 	}
 	logger.Info("connected to telegram")
 
+	if err := b.Setup(); err != nil {
+		logger.Fatal("failed to setup bot", "error", err)
+	}
+	logger.Info("bot setup completed")
+
 	defer b.Stop()
 	b.Start()
 

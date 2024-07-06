@@ -4,3 +4,4 @@ Insights on cities with large Russian expat communities. Perfect for potential m
 
 ### Bot commands
 report - Get report on all available cities
+cities - Get available cities list

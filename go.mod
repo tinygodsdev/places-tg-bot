@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/tinygodsdev/datasdk v0.0.0-20240704233230-ccea2157eb23
+	github.com/tinygodsdev/datasdk v0.0.0-20240706222921-2fbc2607991d
 	gopkg.in/telebot.v3 v3.3.6
 )
 

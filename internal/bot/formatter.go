@@ -41,6 +41,9 @@ const (
 	emojiRich       = "🤑"
 	emojiPoor       = "💸"
 	emojiThought    = "🤔"
+	maskEmoji       = "😷"
+	treeEmoji       = "🌳"
+	skullEmoji      = "💀"
 
 	// weather labels
 	attributeTemperature = "temperature"
@@ -48,17 +51,51 @@ const (
 	attributePressure    = "pressure"
 	attributeDescription = "description"
 
+	// air quality labels
+	attributeCo   = "co"
+	attributeNo2  = "no2"
+	attributeO3   = "o3"
+	attributePm10 = "pm10"
+	attributePm25 = "pm25"
+	attributeSo2  = "so2"
+
 	// world bank labels
-	attributeCPI               = "Consumer price index (2010 = 100)"
-	attributeCPIShort          = "Consumer price index (2010=100)"
-	attributeGDPPerCapita      = "GDP per capita (current US$)"
-	attributeGDPPerCapitaShort = "GDP per capita"
-	attributeExports           = "Merchandise exports (current US$)"
-	attributeExportsShort      = "Exports"
-	attributeImports           = "Merchandise imports (current US$)"
-	attributeImportsShort      = "Imports"
-	attributeUnemployment      = "Unemployment, total (% of total labor force) (modeled ILO estimate)"
-	attributeUnemploymentShort = "Unemployment"
+	attributeCPI                                   = "Consumer price index (2010 = 100)"
+	attributeCPIShort                              = "Consumer price index (2010=100)"
+	attributeGDPPerCapita                          = "GDP per capita (current US$)"
+	attributeGDPPerCapitaShort                     = "GDP per capita"
+	attributeExports                               = "Merchandise exports (current US$)"
+	attributeExportsShort                          = "Exports"
+	attributeImports                               = "Merchandise imports (current US$)"
+	attributeImportsShort                          = "Imports"
+	attributeUnemployment                          = "Unemployment, total (% of total labor force) (modeled ILO estimate)"
+	attributeUnemploymentShort                     = "Unemployment"
+	attributeIndividualsUsingInternet              = "Individuals using the Internet (% of population)"
+	attributeIndividualsUsingInternetShort         = "Internet users"
+	attributeTaxRevenue                            = "Tax revenue (% of GDP)"
+	attributeTaxRevenueShort                       = "Tax revenue"
+	attributeTaxesOnIncomeProfitsCapitalGains      = "Taxes on income, profits and capital gains (% of total taxes)"
+	attributeTaxesOnIncomeProfitsCapitalGainsShort = "Taxes on income, profits, capital gains"
+	attributeTaxesOnGoodsServices                  = "Taxes on goods and services (% value added of industry and services)"
+	attributeTaxesOnGoodsServicesShort             = "Taxes on goods and services"
+	attributeRevenueExcludingGrants                = "Revenue, excluding grants (% of GDP)"
+	attributeRevenueExcludingGrantsShort           = "Revenue, excluding grants"
+	attributeLifeExpectancy                        = "Life expectancy at birth, total (years)"
+	attributeLifeExpectancyShort                   = "Life expectancy"
+	attributeMortalityRateUnder5                   = "Mortality rate, under-5 (per 1,000 live births)"
+	attributeMortalityRateUnder5Short              = "Mortality rate, under-5"
+	attributeGovtExpenditureEducation              = "Government expenditure on education, total (% of GDP)"
+	attributeGovtExpenditureEducationShort         = "Expenditure on education"
+	attributeCO2Emissions                          = "CO2 emissions (metric tons per capita)"
+	attributeCO2EmissionsShort                     = "CO2 emissions"
+	attributeLiteracyRate                          = "Literacy rate, adult total (% of people ages 15 and above)"
+	attributeLiteracyRateShort                     = "Literacy rate"
+	attributeCurrentHealthExpenditure              = "Current health expenditure (% of GDP)"
+	attributeCurrentHealthExpenditureShort         = "Health expenditure"
+	attributeMobileSubscriptions                   = "Mobile cellular subscriptions (per 100 people)"
+	attributeMobileSubscriptionsShort              = "Mobile subscriptions"
+	attributePovertyHeadcount                      = "Poverty headcount ratio at $2.15 a day (2017 PPP) (% of population)"
+	attributePovertyHeadcountShort                 = "Poverty headcount"
 
 	// categories
 	catergoryWeather    = "weather"
@@ -147,7 +184,7 @@ func formatCityAttributes(attributes []data.Attribute) string {
 		if lastTimestamp.After(latestTime) {
 			latestTime = lastTimestamp
 		}
-		attributeString := formatAttribute(attr.Label, lastValue)
+		attributeString := formatAttribute(attr.Label, lastValue, attr.Comment)
 		result = append(result, attributeString)
 	}
 	if !latestTime.IsZero() {
@@ -156,7 +193,99 @@ func formatCityAttributes(attributes []data.Attribute) string {
 	return strings.Join(result, "\n")
 }
 
-func formatAttribute(label string, values string) string {
+func formatWorldBankAttribute(label string, values string, comment string) (string, bool) {
+	var emoji string
+	switch label {
+	case attributeCPI:
+		label = attributeCPIShort
+		cpi, err := strconv.ParseFloat(values, 64)
+		if err == nil {
+			switch {
+			case cpi > 500:
+				emoji = terrorEmoji
+			case cpi > 200:
+				emoji = emojiThought
+			default:
+				emoji = ""
+			}
+		}
+	case attributeGDPPerCapita:
+		label = attributeGDPPerCapitaShort
+		gdp, err := strconv.ParseFloat(values, 64)
+		if err == nil {
+			switch {
+			case gdp > 40000:
+				emoji = emojiRich
+			case gdp > 10000:
+				emoji = ""
+			default:
+				emoji = emojiPoor
+			}
+		}
+		values += "$"
+	case attributeExports:
+		label = attributeExportsShort
+		exports, err := strconv.ParseFloat(values, 64)
+		if err == nil {
+			values = formatLargeNumber(exports) + "$"
+		}
+	case attributeImports:
+		label = attributeImportsShort
+		imports, err := strconv.ParseFloat(values, 64)
+		if err == nil {
+			values = formatLargeNumber(imports) + "$"
+		}
+	case attributeUnemployment:
+		label = attributeUnemploymentShort
+		values += "%"
+	case attributeIndividualsUsingInternet:
+		label = attributeIndividualsUsingInternetShort
+		values += "%"
+	case attributeTaxRevenue:
+		label = attributeTaxRevenueShort
+		values += "% of GDP"
+	case attributeTaxesOnIncomeProfitsCapitalGains:
+		label = attributeTaxesOnIncomeProfitsCapitalGainsShort
+		values += "% of total taxes"
+	case attributeTaxesOnGoodsServices:
+		label = attributeTaxesOnGoodsServicesShort
+		values += "%"
+	case attributeRevenueExcludingGrants:
+		label = attributeRevenueExcludingGrantsShort
+		values += "% of GDP"
+	case attributeLifeExpectancy:
+		label = attributeLifeExpectancyShort
+		values += " years"
+	case attributeMortalityRateUnder5:
+		label = attributeMortalityRateUnder5Short
+		values += " per 1000"
+	case attributeGovtExpenditureEducation:
+		label = attributeGovtExpenditureEducationShort
+		values += "% of GDP"
+	case attributeCO2Emissions:
+		label = attributeCO2EmissionsShort
+		values += " tons"
+	case attributeLiteracyRate:
+		label = attributeLiteracyRateShort
+		values += "%"
+	case attributeCurrentHealthExpenditure:
+		label = attributeCurrentHealthExpenditureShort
+		values += "% of GDP"
+	case attributeMobileSubscriptions:
+		label = attributeMobileSubscriptionsShort
+		values += " per 100"
+	default:
+		return "", false
+	}
+
+	if comment != "" {
+		values = fmt.Sprintf("%s (%s)", values, comment)
+	}
+
+	return fmt.Sprintf("%s: %s %s", bold(capitalize(label)), values, emoji), true
+}
+
+func formatWeatherAttribute(label string, values string, comment string) (string, bool) {
 	var emoji string
 	switch label {
 	case attributeTemperature:
@@ -209,53 +338,117 @@ func formatAttribute(label string, values string) string {
 		} else if strings.Contains(values, "clear") {
 			emoji = clearEmoji
 		}
-
-	case attributeCPI:
-		label = attributeCPIShort
-		cpi, err := strconv.ParseFloat(values, 64)
-		if err == nil {
-			switch {
-			case cpi > 500:
-				emoji = terrorEmoji
-			case cpi > 200:
-				emoji = emojiThought
-			default:
-				emoji = ""
-			}
-		}
-	case attributeGDPPerCapita:
-		label = attributeGDPPerCapitaShort
-		gdp, err := strconv.ParseFloat(values, 64)
-		if err == nil {
-			switch {
-			case gdp > 40000:
-				emoji = emojiRich
-			case gdp > 10000:
-				emoji = ""
-			default:
-				emoji = emojiPoor
-			}
-		}
-
-		values += "$"
-	case attributeExports:
-		label = attributeExportsShort
-		exports, err := strconv.ParseFloat(values, 64)
-		if err == nil {
-			values = formatLargeNumber(exports) + "$"
-		}
-	case attributeImports:
-		label = attributeImportsShort
-		imports, err := strconv.ParseFloat(values, 64)
-		if err == nil {
-			values = formatLargeNumber(imports) + "$"
-		}
-	case attributeUnemployment:
-		label = attributeUnemploymentShort
-		values += "%"
+	default:
+		return "", false
 	}
 
-	return fmt.Sprintf("%s: %s %s", bold(capitalize(label)), values, emoji)
+	if comment != "" {
+		values = fmt.Sprintf("%s (%s)", values, comment)
+	}
+
+	return fmt.Sprintf("%s: %s %s", bold(capitalize(label)), values, emoji), true
+}
+
+func formatAirQualityAttribute(label string, values string, comment string) (string, bool) {
+	var emoji string
+	value, err := strconv.ParseFloat(values, 64)
+	if err != nil {
+		return "", false
+	}
+
+	switch label {
+	case attributeCo:
+		switch {
+		case value > 200:
+			emoji = skullEmoji
+		case value > 100:
+			emoji = maskEmoji
+		case value <= 50:
+			emoji = treeEmoji
+		default:
+			emoji = ""
+		}
+	case attributeNo2:
+		switch {
+		case value >= 101:
+			emoji = skullEmoji
+		case value >= 40:
+			emoji = maskEmoji
+		case value <= 30:
+			emoji = treeEmoji
+		default:
+			emoji = ""
+		}
+	case attributeO3:
+		switch {
+		case value >= 100:
+			emoji = skullEmoji
+		case value >= 50:
+			emoji = maskEmoji
+		case value <= 40:
+			emoji = treeEmoji
+		default:
+			emoji = ""
+		}
+	case attributePm10:
+		switch {
+		case value >= 51:
+			emoji = skullEmoji
+		case value >= 21:
+			emoji = maskEmoji
+		case value <= 20:
+			emoji = treeEmoji
+		default:
+			emoji = ""
+		}
+	case attributePm25:
+		switch {
+		case value >= 26:
+			emoji = skullEmoji
+		case value >= 11:
+			emoji = maskEmoji
+		case value <= 10:
+			emoji = treeEmoji
+		default:
+			emoji = ""
+		}
+	case attributeSo2:
+		switch {
+		case value >= 76:
+			emoji = skullEmoji
+		case value >= 21:
+			emoji = maskEmoji
+		case value <= 20:
+			emoji = treeEmoji
+		default:
+			emoji = ""
+		}
+	default:
+		return "", false
+	}
+
+	if comment != "" {
+		values = fmt.Sprintf("%s (%s)", values, comment)
+	}
+
+	return fmt.Sprintf("%s: %s %s", bold(capitalize(label)), values, emoji), true
+}
+
+func formatAttribute(label string, values string, comment string) string {
+	if result, formatted := formatWeatherAttribute(label, values, comment); formatted {
+		return result
+	}
+
+	if result, formatted := formatWorldBankAttribute(label, values, comment); formatted {
+		return result
+	}
+
+	if result, formatted := formatAirQualityAttribute(label, values, comment); formatted {
+		return result
+	}
+
+	// not a special case, just return the label and values
+	return fmt.Sprintf("%s: %s", bold(capitalize(label)), values)
 }
 
 func formatCatergoryTitle(category string) string {

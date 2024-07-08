@@ -10,6 +10,7 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/tinygodsdev/datasdk/pkg/citycountry"
 	"github.com/tinygodsdev/datasdk/pkg/data"
 	tele "gopkg.in/telebot.v3"
 )
@@ -118,7 +119,7 @@ func FormatCitiesReport(points []data.Point) []string {
 		messages = append(messages, bold(upper(city)))
 		for _, category := range categoryOrder {
 			if attrs, exists := categories[category]; exists {
-				messages = append(messages, formatCatergoryTitle(category))
+				messages = append(messages, formatCatergoryTitle(category, city))
 				messages = append(messages, formatCityAttributes(attrs))
 			}
 		}
@@ -258,7 +259,7 @@ func formatWorldBankAttribute(label string, values string, comment string) (stri
 		values += "% of GDP"
 	case attributeCO2Emissions:
 		label = attributeCO2EmissionsShort
-		values += " tons"
+		values += " tons per capita"
 	case attributeLiteracyRate:
 		label = attributeLiteracyRateShort
 		values += "%"
@@ -447,14 +448,19 @@ func formatAttribute(label string, values string, comment string) string {
 	return fmt.Sprintf("%s: %s", bold(capitalize(label)), values)
 }
 
-func formatCatergoryTitle(category string) string {
+func formatCatergoryTitle(category, city string) string {
 	switch category {
 	case catergoryWeather:
 		return underline("Weather") + " " + weatherEmoji
 	case catergoryAirQuality:
 		return underline("Air Quality") + " " + airEmoji
 	case categoryWorldBank:
-		return underline("National Economy") + " " + stonksEmoji
+		title := "National Economy"
+		flag, ok := citycountry.GetFlagByCity(city)
+		if ok {
+			return underline(title) + " " + flag
+		}
+		return underline(title) + " " + stonksEmoji
 	default:
 		return capitalize(category)
 	}

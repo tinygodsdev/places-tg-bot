@@ -15,35 +15,36 @@ import (
 )
 
 const (
-	happyEmoji      = "😊"
-	loveFaceEmoji   = "😍"
-	heartsFaceEmoji = "🥰"
-	satisfiedEmoji  = "😌"
-	happyCatEmoji   = "😸"
-	partyEmoji      = "🥳"
-	neutralEmoji    = "😐"
-	sadEmoji        = "😞"
-	terrorEmoji     = "😱"
-	hotEmoji        = "🥵"
-	veryHotEmoji    = hotEmoji + terrorEmoji
-	coldEmoji       = "🥶"
-	veryColdEmoji   = coldEmoji + terrorEmoji
-	wetEmoji        = "💦"
-	dryEmoji        = "🌵"
-	normalHumEmoji  = "🌿"
-	pressureEmoji   = "🌀"
-	cloudyEmoji     = "☁️"
-	clearEmoji      = "🌞"
-	bankEmoji       = "🏦"
-	stonksEmoji     = "📈"
-	airEmoji        = "💨"
-	weatherEmoji    = "🏞️"
-	emojiRich       = "🤑"
-	emojiPoor       = "💸"
-	emojiThought    = "🤔"
-	maskEmoji       = "😷"
-	treeEmoji       = "🌳"
-	skullEmoji      = "💀"
+	happyEmoji        = "😊"
+	loveFaceEmoji     = "😍"
+	heartsFaceEmoji   = "🥰"
+	satisfiedEmoji    = "😌"
+	happyCatEmoji     = "😸"
+	partyEmoji        = "🥳"
+	neutralEmoji      = "😐"
+	sadEmoji          = "😞"
+	terrorEmoji       = "😱"
+	hotEmoji          = "🥵"
+	veryHotEmoji      = hotEmoji + terrorEmoji
+	coldEmoji         = "🥶"
+	veryColdEmoji     = coldEmoji + terrorEmoji
+	wetEmoji          = "💦"
+	dryEmoji          = "🌵"
+	normalHumEmoji    = "🌿"
+	pressureEmoji     = "🌀"
+	cloudyEmoji       = "☁️"
+	clearEmoji        = "🌞"
+	bankEmoji         = "🏦"
+	stonksEmoji       = "📈"
+	airEmoji          = "💨"
+	weatherEmoji      = "🏞️"
+	emojiRich         = "🤑"
+	emojiPoor         = "💸"
+	emojiThought      = "🤔"
+	maskEmoji         = "😷"
+	treeEmoji         = "🌳"
+	skullEmoji        = "💀"
+	thunderstormEmoji = "⛈️"
 
 	// weather labels
 	attributeTemperature = "temperature"
@@ -60,42 +61,44 @@ const (
 	attributeSo2  = "so2"
 
 	// world bank labels
-	attributeCPI                                   = "Consumer price index (2010 = 100)"
-	attributeCPIShort                              = "Consumer price index (2010=100)"
-	attributeGDPPerCapita                          = "GDP per capita (current US$)"
-	attributeGDPPerCapitaShort                     = "GDP per capita"
-	attributeExports                               = "Merchandise exports (current US$)"
-	attributeExportsShort                          = "Exports"
-	attributeImports                               = "Merchandise imports (current US$)"
-	attributeImportsShort                          = "Imports"
-	attributeUnemployment                          = "Unemployment, total (% of total labor force) (modeled ILO estimate)"
-	attributeUnemploymentShort                     = "Unemployment"
-	attributeIndividualsUsingInternet              = "Individuals using the Internet (% of population)"
-	attributeIndividualsUsingInternetShort         = "Internet users"
-	attributeTaxRevenue                            = "Tax revenue (% of GDP)"
-	attributeTaxRevenueShort                       = "Tax revenue"
-	attributeTaxesOnIncomeProfitsCapitalGains      = "Taxes on income, profits and capital gains (% of total taxes)"
-	attributeTaxesOnIncomeProfitsCapitalGainsShort = "Taxes on income, profits, capital gains"
-	attributeTaxesOnGoodsServices                  = "Taxes on goods and services (% value added of industry and services)"
-	attributeTaxesOnGoodsServicesShort             = "Taxes on goods and services"
-	attributeRevenueExcludingGrants                = "Revenue, excluding grants (% of GDP)"
-	attributeRevenueExcludingGrantsShort           = "Revenue, excluding grants"
-	attributeLifeExpectancy                        = "Life expectancy at birth, total (years)"
-	attributeLifeExpectancyShort                   = "Life expectancy"
-	attributeMortalityRateUnder5                   = "Mortality rate, under-5 (per 1,000 live births)"
-	attributeMortalityRateUnder5Short              = "Mortality rate, under-5"
-	attributeGovtExpenditureEducation              = "Government expenditure on education, total (% of GDP)"
-	attributeGovtExpenditureEducationShort         = "Expenditure on education"
-	attributeCO2Emissions                          = "CO2 emissions (metric tons per capita)"
-	attributeCO2EmissionsShort                     = "CO2 emissions"
-	attributeLiteracyRate                          = "Literacy rate, adult total (% of people ages 15 and above)"
-	attributeLiteracyRateShort                     = "Literacy rate"
-	attributeCurrentHealthExpenditure              = "Current health expenditure (% of GDP)"
-	attributeCurrentHealthExpenditureShort         = "Health expenditure"
-	attributeMobileSubscriptions                   = "Mobile cellular subscriptions (per 100 people)"
-	attributeMobileSubscriptionsShort              = "Mobile subscriptions"
-	attributePovertyHeadcount                      = "Poverty headcount ratio at $2.15 a day (2017 PPP) (% of population)"
-	attributePovertyHeadcountShort                 = "Poverty headcount"
+	attributeCPI                           = "Consumer price index (2010 = 100)"
+	attributeCPIShort                      = "Consumer price index (2010=100)"
+	attributeGDPPerCapita                  = "GDP per capita (current US$)"
+	attributeGDPPerCapitaShort             = "GDP per capita"
+	attributeExports                       = "Merchandise exports (current US$)"
+	attributeExportsShort                  = "Exports"
+	attributeImports                       = "Merchandise imports (current US$)"
+	attributeImportsShort                  = "Imports"
+	attributeUnemployment                  = "Unemployment, total (% of total labor force) (modeled ILO estimate)"
+	attributeUnemploymentShort             = "Unemployment"
+	attributeIndividualsUsingInternet      = "Individuals using the Internet (% of population)"
+	attributeIndividualsUsingInternetShort = "Internet users"
+	attributeTaxRevenue                    = "Tax revenue (% of GDP)"
+	attributeTaxRevenueShort               = "Tax revenue"
+	attributeLifeExpectancy                = "Life expectancy at birth, total (years)"
+	attributeLifeExpectancyShort           = "Life expectancy"
+	attributeMortalityRateUnder5           = "Mortality rate, under-5 (per 1,000 live births)"
+	attributeMortalityRateUnder5Short      = "Infant mortality"
+	attributeGovtExpenditureEducation      = "Government expenditure on education, total (% of GDP)"
+	attributeGovtExpenditureEducationShort = "Expenditure on education"
+	attributeCO2Emissions                  = "CO2 emissions (metric tons per capita)"
+	attributeCO2EmissionsShort             = "CO2 emissions"
+	attributeLiteracyRate                  = "Literacy rate, adult total (% of people ages 15 and above)"
+	attributeLiteracyRateShort             = "Literacy rate"
+	attributeCurrentHealthExpenditure      = "Current health expenditure (% of GDP)"
+	attributeCurrentHealthExpenditureShort = "Health expenditure"
+	attributePovertyHeadcount              = "Poverty headcount ratio at $2.15 a day (2017 PPP) (% of population)"
+	attributePovertyHeadcountShort         = "Poverty"
+
+	// to be excluded in future datasets
+	// attributeMobileSubscriptions           = "Mobile cellular subscriptions (per 100 people)"
+	// attributeMobileSubscriptionsShort      = "Mobile subscriptions"
+	// attributeTaxesOnIncomeProfitsCapitalGains      = "Taxes on income, profits and capital gains (% of total taxes)"
+	// attributeTaxesOnIncomeProfitsCapitalGainsShort = "Taxes on income, profits, capital gains"
+	// attributeTaxesOnGoodsServices                  = "Taxes on goods and services (% value added of industry and services)"
+	// attributeTaxesOnGoodsServicesShort             = "Taxes on goods and services"
+	// attributeRevenueExcludingGrants                = "Revenue, excluding grants (% of GDP)"
+	// attributeRevenueExcludingGrantsShort           = "Revenue, excluding grants"
 
 	// categories
 	catergoryWeather    = "weather"
@@ -244,15 +247,6 @@ func formatWorldBankAttribute(label string, values string, comment string) (stri
 	case attributeTaxRevenue:
 		label = attributeTaxRevenueShort
 		values += "% of GDP"
-	case attributeTaxesOnIncomeProfitsCapitalGains:
-		label = attributeTaxesOnIncomeProfitsCapitalGainsShort
-		values += "% of total taxes"
-	case attributeTaxesOnGoodsServices:
-		label = attributeTaxesOnGoodsServicesShort
-		values += "%"
-	case attributeRevenueExcludingGrants:
-		label = attributeRevenueExcludingGrantsShort
-		values += "% of GDP"
 	case attributeLifeExpectancy:
 		label = attributeLifeExpectancyShort
 		values += " years"
@@ -271,9 +265,9 @@ func formatWorldBankAttribute(label string, values string, comment string) (stri
 	case attributeCurrentHealthExpenditure:
 		label = attributeCurrentHealthExpenditureShort
 		values += "% of GDP"
-	case attributeMobileSubscriptions:
-		label = attributeMobileSubscriptionsShort
-		values += " per 100"
+	case attributePovertyHeadcount:
+		label = attributePovertyHeadcountShort
+		values += "%"
 	default:
 		return "", false
 	}
@@ -337,6 +331,8 @@ func formatWeatherAttribute(label string, values string, comment string) (string
 			emoji = cloudyEmoji
 		} else if strings.Contains(values, "clear") {
 			emoji = clearEmoji
+		} else if strings.Contains(values, "thunderstorm") {
+			emoji = thunderstormEmoji
 		}
 	default:
 		return "", false

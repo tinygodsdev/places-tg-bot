@@ -269,7 +269,7 @@ func formatWorldBankAttribute(label string, values string, comment string) (stri
 	}
 
 	if comment != "" {
-		values = fmt.Sprintf("%s (%s)", values, comment)
+		values = fmt.Sprintf("%s %s", values, italic("("+comment+")"))
 	}
 
 	return fmt.Sprintf("%s: %s %s", bold(capitalize(label)), values, emoji), true

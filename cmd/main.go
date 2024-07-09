@@ -8,6 +8,7 @@ import (
 	"github.com/tinygodsdev/datasdk/pkg/server"
 	"github.com/tinygodsdev/places-tg-bot/internal/bot"
 	"github.com/tinygodsdev/places-tg-bot/internal/config"
+	"github.com/tinygodsdev/places-tg-bot/internal/user"
 )
 
 func main() {
@@ -30,7 +31,13 @@ func main() {
 	}
 	logger.Info("client created", "type", cfg.ServerType, "info", "health check passed")
 
-	b, err := bot.New(cfg, client, logger)
+	userStore, err := user.NewMongoStorage(cfg.Config)
+	if err != nil {
+		logger.Fatal("failed to create user storage", "error", err)
+	}
+	logger.Info("user storage created")
+
+	b, err := bot.New(cfg, client, logger, userStore)
 	if err != nil {
 		logger.Fatal("failed to create bot", "error", err)
 	}

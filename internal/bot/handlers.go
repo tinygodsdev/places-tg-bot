@@ -16,20 +16,6 @@ func (b *Bot) handleHelp(c tele.Context) error {
 	return c.Send(b.getHelpMessage())
 }
 
-func (b *Bot) handleReport(c tele.Context) error {
-	citiesData, err := b.fetchCitiesData(fetchCitiesDataInput{})
-	if err != nil {
-		return err
-	}
-
-	cityReports := FormatCitiesReport(citiesData.points)
-	report := strings.Join([]string{
-		strings.Join(cityReports, "\n\n"),
-		FormatMessageFooter(citiesData.sources, citiesData.start),
-	}, "\n\n")
-	return c.Send(report, &tele.SendOptions{ParseMode: tele.ModeHTML})
-}
-
 func (b *Bot) handleCitiesCallback(c tele.Context) error {
 	citiesData, err := b.fetchCitiesData(fetchCitiesDataInput{
 		city: c.Data(),

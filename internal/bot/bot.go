@@ -1,13 +1,17 @@
 package bot
 
 import (
+	"context"
+	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/tinygodsdev/datasdk/pkg/logger"
 	"github.com/tinygodsdev/datasdk/pkg/server"
 	"github.com/tinygodsdev/places-tg-bot/internal/config"
+	"github.com/tinygodsdev/places-tg-bot/internal/user"
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -31,9 +35,16 @@ type Bot struct {
 	log          logger.Logger
 	t            *tele.Bot
 	commands     []tele.Command
+	userStore    user.Storage
+	mu           sync.Mutex
 }
 
-func New(cfg *config.Config, placesClient server.Client, l logger.Logger) (*Bot, error) {
+func New(
+	cfg *config.Config,
+	placesClient server.Client,
+	l logger.Logger,
+	userStore user.Storage,
+) (*Bot, error) {
 	settings := tele.Settings{
 		Token:  cfg.TelegramToken,
 		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
@@ -56,6 +67,7 @@ func New(cfg *config.Config, placesClient server.Client, l logger.Logger) (*Bot,
 		t:            t,
 		log:          l,
 		commands:     commands,
+		userStore:    userStore,
 	}
 
 	b.linkHandlers()
@@ -93,16 +105,15 @@ func (b *Bot) Stop() {
 }
 
 func (b *Bot) linkHandlers() {
-	b.t.Handle(CommandStart, b.getHandler(b.handleStart))
-	b.t.Handle(CommandCities, b.getHandler(b.handleCities))
-	b.t.Handle(CommandHelp, b.getHandler(b.handleHelp))
-	b.t.Handle(CommandReport, b.getHandler(b.handleReport)) // TODO: remove or replace
+	b.t.Handle(CommandStart, b.getHandler(CommandStart, b.handleStart))
+	b.t.Handle(CommandCities, b.getHandler(CommandCities, b.handleCities))
+	b.t.Handle(CommandHelp, b.getHandler(CommandHelp, b.handleHelp))
 
 	// callbacks
-	b.t.Handle(&tele.InlineButton{Unique: callbackCity}, b.getHandler(b.handleCitiesCallback))
+	b.t.Handle(&tele.InlineButton{Unique: callbackCity}, b.getHandler(callbackCity, b.handleCitiesCallback))
 }
 
-func (b *Bot) getHandler(fn func(tele.Context) error) tele.HandlerFunc {
+func (b *Bot) getHandler(name string, fn func(tele.Context) error) tele.HandlerFunc {
 	return func(c tele.Context) error {
 		requestID := uuid.New().String()
 		start := time.Now()
@@ -111,13 +122,59 @@ func (b *Bot) getHandler(fn func(tele.Context) error) tele.HandlerFunc {
 			unique = c.Callback().Unique
 		}
 
+		go func() {
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+
+			if c.Sender() == nil {
+				b.log.Error("sender is nil", "callback", unique)
+				return
+			}
+
+			b.mu.Lock()
+			defer b.mu.Unlock()
+
+			if err := b.userStore.SaveOrUpdateUser(ctx, &user.User{
+				ID:        fmt.Sprint(c.Sender().ID),
+				FirstName: c.Sender().FirstName,
+				LastName:  c.Sender().LastName,
+				Username:  c.Sender().Username,
+			}); err != nil {
+				b.log.Error("failed to save user", "error", err, "request_id", requestID)
+				return
+			}
+
+			actionLog := &user.UserActionLog{
+				UserID: fmt.Sprint(c.Sender().ID),
+				Action: name,
+				Details: map[string]interface{}{
+					"request_id": requestID,
+					"callback":   unique,
+					"text":       c.Message().Text,
+					"data":       c.Data(),
+				},
+			}
+
+			if err := b.userStore.LogUserAction(ctx, actionLog); err != nil {
+				b.log.Error("failed to log user action", "error", err, "request_id", requestID)
+				return
+			}
+
+			b.log.Info("user input saved", "id", c.Sender().ID)
+		}()
+
+		recipient := c.Recipient().Recipient()
+		if b.cfg.Env == "dev" {
+			recipient = fmt.Sprintf("%+v", c.Recipient())
+		}
+
 		b.log.Info(
 			"received request",
 			"id", requestID,
 			"text", c.Message().Text,
 			"callback", unique,
 			"data", c.Data(),
-			"recipient", c.Recipient().Recipient(),
+			"recipient", recipient,
 		)
 		defer func() {
 			b.log.Info(

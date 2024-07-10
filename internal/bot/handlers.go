@@ -4,7 +4,9 @@ import (
 	"context"
 	"sort"
 	"strings"
+	"time"
 
+	"github.com/tinygodsdev/datasdk/pkg/data"
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -33,7 +35,10 @@ func (b *Bot) handleCitiesCallback(c tele.Context) error {
 }
 
 func (b *Bot) handleCities(c tele.Context) error {
-	tags, err := b.placesClient.GetTags(context.TODO())
+	tags, err := b.placesClient.GetTags(context.TODO(), data.Filter{
+		From: time.Now().Add(-24 * time.Hour),
+		To:   time.Now(),
+	})
 	if err != nil {
 		return err
 	}

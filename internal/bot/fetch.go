@@ -52,7 +52,10 @@ func (b *Bot) fetchCitiesData(input fetchCitiesDataInput) (*fetchCitiesDataOutpu
 		return nil, err
 	}
 
-	sources, err := b.placesClient.GetSources(context.TODO())
+	sources, err := b.placesClient.GetSources(context.TODO(), data.Filter{
+		From: input.from,
+		To:   input.to,
+	})
 	if err != nil {
 		return nil, err
 	}

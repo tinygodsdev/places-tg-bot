@@ -11,6 +11,7 @@ import (
 	"github.com/tinygodsdev/datasdk/pkg/logger"
 	"github.com/tinygodsdev/datasdk/pkg/server"
 	"github.com/tinygodsdev/places-tg-bot/internal/config"
+	"github.com/tinygodsdev/places-tg-bot/internal/formatter"
 	"github.com/tinygodsdev/places-tg-bot/internal/user"
 	tele "gopkg.in/telebot.v3"
 )
@@ -190,7 +191,7 @@ func (b *Bot) getHandler(name string, fn func(tele.Context) error) tele.HandlerF
 func (b *Bot) getHelpMessage() string {
 	return strings.Join([]string{
 		botBioEn,
-		FormatCommands(b.commands),
-		FormatDeveloperPlain(),
+		formatter.FormatCommands(b.commands),
+		formatter.FormatDeveloperPlain(),
 	}, "\n\n")
 }

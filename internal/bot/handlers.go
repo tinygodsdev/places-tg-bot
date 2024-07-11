@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/tinygodsdev/datasdk/pkg/data"
+	"github.com/tinygodsdev/places-tg-bot/internal/formatter"
 	tele "gopkg.in/telebot.v3"
 )
 
@@ -26,10 +27,10 @@ func (b *Bot) handleCitiesCallback(c tele.Context) error {
 		return err
 	}
 
-	cityReports := FormatCitiesReport(citiesData.points)
+	cityReports := formatter.FormatCitiesReport(citiesData.points)
 	report := strings.Join([]string{
 		strings.Join(cityReports, "\n\n"),
-		FormatMessageFooter(citiesData.sources, citiesData.start),
+		formatter.FormatMessageFooter(citiesData.sources, citiesData.start),
 	}, "\n\n")
 	return c.Send(report, &tele.SendOptions{ParseMode: tele.ModeHTML})
 }
@@ -60,7 +61,7 @@ func (b *Bot) handleCities(c tele.Context) error {
 	const buttonsPerRow = 3
 	var btns []tele.Btn
 	for _, city := range cities {
-		btns = append(btns, r.Data(capitalize(city), callbackCity, city))
+		btns = append(btns, r.Data(formatter.Capitalize(city), callbackCity, city))
 	}
 
 	var rows []tele.Row

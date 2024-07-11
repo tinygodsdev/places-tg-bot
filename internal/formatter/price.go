@@ -14,6 +14,7 @@ func formatPriceAttribute(label string, values string, comment string) (formatAt
 	switch label {
 	case attributePairOfJeans:
 		label = attributePairOfJeansShort
+		subgroup = clothing
 	case attributeApples:
 		label = attributeApplesShort
 		price, err := strconv.ParseFloat(values, 64)
@@ -23,6 +24,7 @@ func formatPriceAttribute(label string, values string, comment string) (formatAt
 		subgroup = foodAndDrink
 	case attributeMonthlyNetSalary:
 		label = attributeMonthlyNetSalaryShort
+		subgroup = finance
 	case attributeBanana:
 		label = attributeBananaShort
 		price, err := strconv.ParseFloat(values, 64)
@@ -55,6 +57,7 @@ func formatPriceAttribute(label string, values string, comment string) (formatAt
 		subgroup = foodAndDrink
 	case attributeCigarettes:
 		label = attributeCigarettesShort
+		subgroup = various
 	case attributeDomesticBeerBottle:
 		label = attributeDomesticBeerBottleShort
 		subgroup = foodAndDrink
@@ -73,6 +76,7 @@ func formatPriceAttribute(label string, values string, comment string) (formatAt
 		subgroup = education
 	case attributeInternet:
 		label = attributeInternetShort
+		subgroup = communication
 	case attributeBread:
 		label = attributeBreadShort
 		price, err := strconv.ParseFloat(values, 64)
@@ -102,6 +106,7 @@ func formatPriceAttribute(label string, values string, comment string) (formatAt
 		subgroup = foodAndDrink
 	case attributeMobilePlan:
 		label = attributeMobilePlanShort
+		subgroup = communication
 	case attributeMonthlyPass:
 		label = attributeMonthlyPassShort
 		subgroup = transport
@@ -150,7 +155,7 @@ func formatPriceAttribute(label string, values string, comment string) (formatAt
 		subgroup = apartment
 	case attributeMortgageInterestRate:
 		label = attributeMortgageInterestRateShort
-		subgroup = apartment
+		subgroup = finance
 	default:
 		return formatAttributeResult{}, false
 	}

@@ -1,39 +1,47 @@
 package formatter
 
 const (
-	happyEmoji        = "😊"
-	loveFaceEmoji     = "😍"
-	heartsFaceEmoji   = "🥰"
-	satisfiedEmoji    = "😌"
-	happyCatEmoji     = "😸"
-	partyEmoji        = "🥳"
-	neutralEmoji      = "😐"
-	sadEmoji          = "😞"
-	terrorEmoji       = "😱"
-	hotEmoji          = "🥵"
-	veryHotEmoji      = hotEmoji + terrorEmoji
-	coldEmoji         = "🥶"
-	veryColdEmoji     = coldEmoji + terrorEmoji
-	wetEmoji          = "💦"
-	dryEmoji          = "🌵"
-	normalHumEmoji    = "🌿"
-	pressureEmoji     = "🌀"
-	cloudyEmoji       = "☁️"
-	clearEmoji        = "🌞"
-	bankEmoji         = "🏦"
-	stonksEmoji       = "📈"
-	airEmoji          = "💨"
-	weatherEmoji      = "🏞️"
-	emojiRich         = "🤑"
-	emojiPoor         = "💸"
-	dollarEmoji       = "💵"
-	emojiThought      = "🤔"
-	maskEmoji         = "😷"
-	treeEmoji         = "🌳"
-	skullEmoji        = "💀"
-	thunderstormEmoji = "⛈️"
-	rainEmoji         = "🌧️"
-	snowEmoji         = "❄️"
+	happyEmoji         = "😊"
+	loveFaceEmoji      = "😍"
+	heartsFaceEmoji    = "🥰"
+	satisfiedEmoji     = "😌"
+	happyCatEmoji      = "😸"
+	partyEmoji         = "🥳"
+	neutralEmoji       = "😐"
+	sadEmoji           = "😞"
+	terrorEmoji        = "😱"
+	hotEmoji           = "🥵"
+	veryHotEmoji       = hotEmoji + terrorEmoji
+	coldEmoji          = "🥶"
+	veryColdEmoji      = coldEmoji + terrorEmoji
+	wetEmoji           = "💦"
+	dryEmoji           = "🌵"
+	normalHumEmoji     = "🌿"
+	pressureEmoji      = "🌀"
+	cloudyEmoji        = "☁️"
+	clearEmoji         = "🌞"
+	bankEmoji          = "🏦"
+	stonksEmoji        = "📈"
+	airEmoji           = "💨"
+	weatherEmoji       = "🏞️"
+	emojiRich          = "🤑"
+	emojiPoor          = "💸"
+	dollarEmoji        = "💵"
+	emojiThought       = "🤔"
+	maskEmoji          = "😷"
+	treeEmoji          = "🌳"
+	skullEmoji         = "💀"
+	thunderstormEmoji  = "⛈️"
+	rainEmoji          = "🌧️"
+	snowEmoji          = "❄️"
+	foodEmoji          = "🍔"
+	homeEmoji          = "🏠"
+	educationEmoji     = "🎓"
+	communicationEmoji = "📱"
+	clothingEmoji      = "👕"
+	financeEmoji       = "💰"
+	transportEmoji     = "🚗"
+	variousEmoji       = "🎉"
 
 	// weather labels
 	attributeTemperature = "temperature"
@@ -86,7 +94,7 @@ const (
 	attributePairOfJeansShort = "Pair of Jeans"
 
 	attributeApartment1BedroomOutsideCentre      = "Apartment (1 bedroom) Outside of Centre"
-	attributeApartment1BedroomOutsideCentreShort = "Rent 1-bedroom apartment (not central)"
+	attributeApartment1BedroomOutsideCentreShort = "Rent 1-bedroom apartment (non-central)"
 
 	attributeApartment1BedroomCityCentre      = "Apartment (1 bedroom) in City Centre"
 	attributeApartment1BedroomCityCentreShort = "Rent 1-bedroom apartment (central)"
@@ -118,17 +126,14 @@ const (
 	attributeCigarettes      = "Cigarettes 20 Pack (Marlboro)"
 	attributeCigarettesShort = "Pack of cigarettes"
 
-	attributeCinemaSeat = "Cinema, International Release, 1 Seat"
-	attributeCokePepsi  = "Coke/Pepsi (12 oz small bottle)"
-
 	attributeDomesticBeerBottle      = "Domestic Beer (0.5 liter bottle)"
-	attributeDomesticBeerBottleShort = "Beer bottle (0.5l)"
+	attributeDomesticBeerBottleShort = "Bottle of beer"
 
 	attributeEggs      = "Eggs (regular) (12)"
 	attributeEggsShort = "12 eggs"
 
 	attributeGasoline      = "Gasoline (1 gallon)"
-	attributeGasolineShort = "1l of gasoline"
+	attributeGasolineShort = "1L of gasoline"
 
 	attributeInternationalPrimarySchool      = "International Primary School, Yearly for 1 Child"
 	attributeInternationalPrimarySchoolShort = "Primary school (yearly)"
@@ -149,7 +154,7 @@ const (
 	attributeMealFor2Short = "Meal for 2 in mid-range restaurant"
 
 	attributeMilk      = "Milk (regular), (1 gallon)"
-	attributeMilkShort = "1l of milk"
+	attributeMilkShort = "1L of milk"
 
 	attributeMobilePlan      = "Mobile Phone Monthly Plan with Calls and 10GB+ Data"
 	attributeMobilePlanShort = "Mobile plan (monthly)"
@@ -179,7 +184,7 @@ const (
 	attributeTomatoShort = "1kg of tomatoes"
 
 	attributeWaterBottle      = "Water (1.5 liter bottle)"
-	attributeWaterBottleShort = "1.5l water bottle"
+	attributeWaterBottleShort = "1.5L water bottle"
 
 	// ignored for now
 	attributePricePerSqFtOutsideCentre       = "Price per Square Feet to Buy Apartment Outside of Centre"
@@ -202,6 +207,8 @@ const (
 	attributeOnion                           = "Onion (1 lb)"
 	attributeImportedBeer                    = "Imported Beer (12 oz small bottle)"
 	attributeLettuce                         = "Lettuce (1 head)"
+	attributeCinemaSeat                      = "Cinema, International Release, 1 Seat"
+	attributeCokePepsi                       = "Coke/Pepsi (12 oz small bottle)"
 
 	// categories
 	catergoryWeather    = "weather"
@@ -210,11 +217,15 @@ const (
 	categoryPrices      = "prices"
 
 	// subgroups
-	noSubgroup   = "no_subgroup"
-	foodAndDrink = "Food & Drink"
-	transport    = "Transport"
-	education    = "Education"
-	apartment    = "Apartment"
+	noSubgroup    = "no_subgroup"
+	foodAndDrink  = foodEmoji + "Food & Drink"
+	transport     = transportEmoji + "Transport"
+	education     = educationEmoji + "Education"
+	apartment     = homeEmoji + "Apartment"
+	communication = communicationEmoji + "Communication"
+	clothing      = clothingEmoji + "Clothing"
+	finance       = financeEmoji + "Finance"
+	various       = "Various"
 
 	// provider
 	provider = "tinygods.dev"

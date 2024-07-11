@@ -46,6 +46,11 @@ func getSkipLabels() map[string]struct{} {
 		attributeMealInexpensiveRestaurant:       {},
 		attributePricePerSqFtOutsideCentre:       {},
 		attributePricePerSqFtCityCentre:          {},
+		attributeCigarettes:                      {},
+		attributeOranges:                         {},
+		attributeTomato:                          {},
+		attributeWaterBottle:                     {},
+		attributePairOfJeans:                     {},
 	}
 }
 

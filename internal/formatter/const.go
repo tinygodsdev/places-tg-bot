@@ -210,11 +210,15 @@ const (
 	attributeCinemaSeat                      = "Cinema, International Release, 1 Seat"
 	attributeCokePepsi                       = "Coke/Pepsi (12 oz small bottle)"
 
+	// general info
+	attributeMotto = "motto"
+
 	// categories
 	catergoryWeather    = "weather"
 	catergoryAirQuality = "air_quality"
 	categoryWorldBank   = "world_bank"
 	categoryPrices      = "prices"
+	categoryInfo        = "info"
 
 	// subgroups
 	noSubgroup    = "no_subgroup"

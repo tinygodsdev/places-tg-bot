@@ -51,6 +51,7 @@ func getSkipLabels() map[string]struct{} {
 		attributeTomato:                          {},
 		attributeWaterBottle:                     {},
 		attributePairOfJeans:                     {},
+		attributeMotto:                           {},
 	}
 }
 
@@ -58,15 +59,45 @@ func FormatCitiesReport(points []data.Point) []string {
 	groupedData := groupDataByCityAndCategory(points)
 	var messages []string
 	for city, categories := range groupedData {
-		messages = append(messages, Bold(city)+" - city report")
+		var flag string
+		cityFlag, ok := citycountry.GetFlagByCity(city)
+		if ok {
+			flag = " " + cityFlag + " "
+		}
+
+		var cityInfo string
+		infoAttrs, ok := categories[categoryInfo]
+		if ok {
+			cityInfo = "\n" + formatCityInfo(infoAttrs)
+		}
+
+		messages = append(
+			messages,
+			Bold(city)+flag+" "+getMotto(categories[categoryInfo])+cityInfo,
+		)
+
 		for _, category := range categoryOrder {
 			if attrs, exists := categories[category]; exists {
 				messages = append(messages, formatCatergoryTitle(category, city))
-				messages = append(messages, formatCityAttributes(attrs, getSkipLabels()))
+				messages = append(messages, formatCityAttributes(attrs, getSkipLabels(), false))
 			}
 		}
 	}
 	return messages
+}
+
+func formatCityInfo(attrs []data.Attribute) string {
+	var messages []string
+	messages = append(messages, formatCityAttributes(attrs, getSkipLabels(), true))
+	return strings.Join(messages, "\n")
+}
+
+func getMotto(attrs []data.Attribute) string {
+	motto := findAttributeByLabel(attrs, attributeMotto)
+	if len(motto.Values) != 0 {
+		return Italic(motto.Values[0])
+	}
+	return ""
 }
 
 func FormatSources(sources []data.Source) string {
@@ -114,7 +145,7 @@ func FormatMessageFooter(sources []data.Source, startTime time.Time) string {
 	return strings.Join(res, "\n")
 }
 
-func formatCityAttributes(attributes []data.Attribute, skipLabels map[string]struct{}) string {
+func formatCityAttributes(attributes []data.Attribute, skipLabels map[string]struct{}, skipTs bool) string {
 	var result []formatAttributeResult
 	var latestTime time.Time
 	for _, attr := range attributes {
@@ -179,7 +210,7 @@ func formatCityAttributes(attributes []data.Attribute, skipLabels map[string]str
 		}
 	}
 
-	if !latestTime.IsZero() {
+	if !latestTime.IsZero() && !skipTs {
 		formattedResult = append(formattedResult, Italic(fmt.Sprintf("updated at %s", latestTime.Format("2006-01-02 15:04"))))
 	}
 	return strings.Join(formattedResult, "\n")
@@ -293,4 +324,13 @@ func getCategoryFromTags(tags []data.Tag) string {
 		}
 	}
 	return ""
+}
+
+func findAttributeByLabel(attributes []data.Attribute, label string) data.Attribute {
+	for _, attr := range attributes {
+		if attr.Label == label {
+			return attr
+		}
+	}
+	return data.Attribute{}
 }

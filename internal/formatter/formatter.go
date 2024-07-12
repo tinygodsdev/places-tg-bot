@@ -22,7 +22,8 @@ type formatAttributeResult struct {
 func getSkipLabels() map[string]struct{} {
 	return map[string]struct{}{
 		// world bank
-		attributeCO2Emissions: {},
+		attributeCO2Emissions:               {},
+		attributeHealthExpenditurePerCapita: {},
 		// prices
 		attributeMenLeatherBusinessShoes:         {},
 		attributeNikeRunningShoes:                {},
@@ -52,6 +53,9 @@ func getSkipLabels() map[string]struct{} {
 		attributeWaterBottle:                     {},
 		attributePairOfJeans:                     {},
 		attributeMotto:                           {},
+		// info
+		attributeAreaTotal: {},
+		attributeTimezone:  {},
 	}
 }
 
@@ -230,6 +234,10 @@ func formatAttribute(label string, values string, comment string) formatAttribut
 	}
 
 	if result, formatted := formatPriceAttribute(label, values, comment); formatted {
+		return result
+	}
+
+	if result, formatted := formatGeneralInfoAttribute(label, values, comment); formatted {
 		return result
 	}
 

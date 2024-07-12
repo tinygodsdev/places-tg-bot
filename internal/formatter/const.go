@@ -83,7 +83,7 @@ const (
 	attributeLiteracyRate                    = "Literacy rate, adult total (% of people ages 15 and above)"
 	attributeLiteracyRateShort               = "Literacy rate"
 	attributeCurrentHealthExpenditure        = "Current health expenditure (% of GDP)"
-	attributeCurrentHealthExpenditureShort   = "Health spending"
+	attributeCurrentHealthExpenditureShort   = "Spending on health"
 	attributePovertyHeadcount                = "Poverty headcount ratio at $2.15 a day (2017 PPP) (% of population)"
 	attributePovertyHeadcountShort           = "Poverty"
 	attributeHealthExpenditurePerCapita      = "Current health expenditure per capita, PPP (current international $)"
@@ -211,7 +211,17 @@ const (
 	attributeCokePepsi                       = "Coke/Pepsi (12 oz small bottle)"
 
 	// general info
-	attributeMotto = "motto"
+	attributeMotto                  = "motto"
+	attributePopulationTotal        = "population_total"
+	attributePopulationTotalShort   = "Population"
+	attributeAreaTotal              = "area_total_km2"
+	attributeAreaTotalShort         = "Area"
+	attributeElevation              = "elevation_m"
+	attributeElevationShort         = "Elevation"
+	attributeTimezone               = "timezone"
+	attributeTimezoneShort          = "Timezone"
+	attributePopulationDensity      = "population_density_km2"
+	attributePopulationDensityShort = "Density"
 
 	// categories
 	catergoryWeather    = "weather"

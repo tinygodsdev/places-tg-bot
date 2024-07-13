@@ -33,6 +33,11 @@ func (b *Bot) handleCitiesCallback(c tele.Context) error {
 		strings.Join(cityReports, "\n\n"),
 		formatter.FormatMessageFooter(citiesData.sources, citiesData.start),
 	}, "\n\n")
+
+	// if err := c.Delete(); err != nil {
+	// 	b.log.Error("failed to delete message", "error", err)
+	// }
+
 	return c.Send(report, &tele.SendOptions{ParseMode: tele.ModeHTML})
 }
 

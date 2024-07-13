@@ -17,19 +17,32 @@ import (
 )
 
 const (
-	CommandStart  = "/start"
-	CommandReport = "/report"
-	CommandCities = "/cities"
-	CommandHelp   = "/help"
+	CommandStart        = "/start"
+	CommandCities       = "/cities"
+	CommandHelp         = "/help"
+	CommandSchedule     = "/schedule"
+	CommandReportCities = "/report_cities"
 
 	TagCategory = "category"
 	TagCity     = "city"
 
-	callbackCity  = "city_callback"
+	callbackCity         = "city_callback"
+	callbackSchedule     = "schedule_callback"
+	callbackReportCities = "report_cities_callback"
+
 	actionUnknown = "unknown"
 
 	botBioEn       = "Insights on cities with large Russian expat communities. Perfect for potential movers or the curious!"
 	suggestionInfo = "If you want to suggest more cities or something else, please send it to the bot."
+
+	scheduleMinutely   = "@minutely" // for testing
+	scheduleHourly     = "@hourly"
+	scheduleDaily      = "@daily"
+	scheduleWeekly     = "@weekly"
+	scheduleMonthly    = "@monthly"
+	scheduleBiannually = "@biannually"
+
+	selectedEmoji = "✅"
 )
 
 type Bot struct {
@@ -62,6 +75,8 @@ func New(
 		{Text: CommandStart, Description: "Start the bot"},
 		{Text: CommandCities, Description: "Get available cities list"},
 		{Text: CommandHelp, Description: "Get bot instructions"},
+		{Text: CommandSchedule, Description: "Set a schedule to get city insights"},
+		{Text: CommandReportCities, Description: "Select cities for regular reports"},
 	}
 
 	b := &Bot{
@@ -111,9 +126,13 @@ func (b *Bot) linkHandlers() {
 	b.t.Handle(CommandStart, b.getHandler(CommandStart, b.handleStart))
 	b.t.Handle(CommandCities, b.getHandler(CommandCities, b.handleCities))
 	b.t.Handle(CommandHelp, b.getHandler(CommandHelp, b.handleHelp))
+	b.t.Handle(CommandSchedule, b.getHandler(CommandSchedule, b.handleSchedule))
+	b.t.Handle(CommandReportCities, b.getHandler(CommandReportCities, b.handleReportCities))
 
 	// callbacks
 	b.t.Handle(&tele.InlineButton{Unique: callbackCity}, b.getHandler(callbackCity, b.handleCitiesCallback))
+	b.t.Handle(&tele.InlineButton{Unique: callbackSchedule}, b.getHandler(callbackSchedule, b.handleScheduleCallback))
+	b.t.Handle(&tele.InlineButton{Unique: callbackReportCities}, b.getHandler(callbackReportCities, b.handleReportCitiesCallback))
 
 	b.t.Handle(tele.OnText, b.getHandler(actionUnknown, b.handleRandom))
 }
@@ -139,14 +158,28 @@ func (b *Bot) getHandler(name string, fn func(tele.Context) error) tele.HandlerF
 			b.mu.Lock()
 			defer b.mu.Unlock()
 
-			if err := b.userStore.SaveOrUpdateUser(ctx, &user.User{
-				ID:        fmt.Sprint(c.Sender().ID),
-				FirstName: c.Sender().FirstName,
-				LastName:  c.Sender().LastName,
-				Username:  c.Sender().Username,
-			}); err != nil {
-				b.log.Error("failed to save user", "error", err, "request_id", requestID)
-				return
+			usr, err := b.userStore.GetUserByID(ctx, fmt.Sprint(c.Sender().ID))
+			if err != nil {
+				b.log.Error("failed to get user", "error", err, "request_id", requestID)
+			}
+			if usr == nil {
+				if err := b.userStore.SaveOrUpdateUser(ctx, &user.User{
+					ID:        fmt.Sprint(c.Sender().ID),
+					FirstName: c.Sender().FirstName,
+					LastName:  c.Sender().LastName,
+					Username:  c.Sender().Username,
+				}); err != nil {
+					b.log.Error("failed to save user", "error", err, "request_id", requestID)
+					return
+				}
+			} else {
+				usr.FirstName = c.Sender().FirstName
+				usr.LastName = c.Sender().LastName
+				usr.Username = c.Sender().Username
+				if err := b.userStore.SaveOrUpdateUser(ctx, usr); err != nil {
+					b.log.Error("failed to update user", "error", err, "request_id", requestID)
+					return
+				}
 			}
 
 			actionLog := &user.UserActionLog{
@@ -199,4 +232,15 @@ func (b *Bot) getHelpMessage() string {
 		suggestionInfo,
 		formatter.FormatDeveloperPlain(),
 	}, "\n\n")
+}
+
+func (b *Bot) getSchedules() []string {
+	return []string{
+		scheduleMinutely,
+		scheduleHourly,
+		scheduleDaily,
+		scheduleWeekly,
+		scheduleMonthly,
+		scheduleBiannually,
+	}
 }

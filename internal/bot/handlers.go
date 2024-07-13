@@ -2,6 +2,7 @@ package bot
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"strings"
 	"time"
@@ -77,4 +78,9 @@ func (b *Bot) handleCities(c tele.Context) error {
 	return c.Send("Choose a city to get report:", &tele.SendOptions{
 		ReplyMarkup: r,
 	})
+}
+
+// handle random message
+func (b *Bot) handleRandom(c tele.Context) error {
+	return c.Send(fmt.Sprintf("You message is acknowledged. %s Otherwise type /help to get instructions.", suggestionInfo))
 }

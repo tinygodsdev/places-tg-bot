@@ -25,9 +25,11 @@ const (
 	TagCategory = "category"
 	TagCity     = "city"
 
-	callbackCity = "city_callback"
+	callbackCity  = "city_callback"
+	actionUnknown = "unknown"
 
-	botBioEn = "Insights on cities with large Russian expat communities. Perfect for potential movers or the curious!"
+	botBioEn       = "Insights on cities with large Russian expat communities. Perfect for potential movers or the curious!"
+	suggestionInfo = "If you want to suggest more cities or something else, please send it to the bot."
 )
 
 type Bot struct {
@@ -112,6 +114,8 @@ func (b *Bot) linkHandlers() {
 
 	// callbacks
 	b.t.Handle(&tele.InlineButton{Unique: callbackCity}, b.getHandler(callbackCity, b.handleCitiesCallback))
+
+	b.t.Handle(tele.OnText, b.getHandler(actionUnknown, b.handleRandom))
 }
 
 func (b *Bot) getHandler(name string, fn func(tele.Context) error) tele.HandlerFunc {
@@ -192,6 +196,7 @@ func (b *Bot) getHelpMessage() string {
 	return strings.Join([]string{
 		botBioEn,
 		formatter.FormatCommands(b.commands),
+		suggestionInfo,
 		formatter.FormatDeveloperPlain(),
 	}, "\n\n")
 }

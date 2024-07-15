@@ -1,27 +1,29 @@
 package formatter
 
+import "github.com/tinygodsdev/cities/cities"
+
 func formatGeneralInfoAttribute(label string, values string, comment string) (formatAttributeResult, bool) {
 	var emoji string
 	var subgroup string
 	var order int
 
 	switch label {
-	case attributePopulationTotal:
-		label = attributePopulationTotalShort
+	case cities.AttributePopulationTotal:
+		label = cities.AttributePopulationTotalShort
 		order = 100
-	case attributePopulationDensity:
-		label = attributePopulationDensityShort
+	case cities.AttributePopulationDensity:
+		label = cities.AttributePopulationDensityShort
 		values += " people/km²"
 		order = 200
-	case attributeAreaTotal:
-		label = attributeAreaTotalShort
+	case cities.AttributeAreaTotal:
+		label = cities.AttributeAreaTotalShort
 		values += " km²"
-	case attributeElevation:
-		label = attributeElevationShort
+	case cities.AttributeElevation:
+		label = cities.AttributeElevationShort
 		values += " m"
 		order = 300
-	case attributeTimezone:
-		label = attributeTimezoneShort
+	case cities.AttributeTimezone:
+		label = cities.AttributeTimezoneShort
 	default:
 		return formatAttributeResult{}, false
 	}

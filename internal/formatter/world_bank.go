@@ -1,14 +1,18 @@
 package formatter
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/tinygodsdev/cities/cities"
+)
 
 func formatWorldBankAttribute(label string, values string, comment string) (formatAttributeResult, bool) {
 	var emoji string
 	var subgroup string
 	var order int
 	switch label {
-	case attributeCPI:
-		label = attributeCPIShort
+	case cities.AttributeCPI:
+		label = cities.AttributeCPIShort
 		cpi, err := strconv.ParseFloat(values, 64)
 		if err == nil {
 			switch {
@@ -20,8 +24,8 @@ func formatWorldBankAttribute(label string, values string, comment string) (form
 				emoji = ""
 			}
 		}
-	case attributeGDPPerCapita:
-		label = attributeGDPPerCapitaShort
+	case cities.AttributeGDPPerCapita:
+		label = cities.AttributeGDPPerCapitaShort
 		gdp, err := strconv.ParseFloat(values, 64)
 		if err == nil {
 			switch {
@@ -34,50 +38,50 @@ func formatWorldBankAttribute(label string, values string, comment string) (form
 			}
 		}
 		values += "$"
-	case attributeExports:
-		label = attributeExportsShort
+	case cities.AttributeExports:
+		label = cities.AttributeExportsShort
 		exports, err := strconv.ParseFloat(values, 64)
 		if err == nil {
 			values = FormatLargeNumber(exports) + "$"
 		}
-	case attributeImports:
-		label = attributeImportsShort
+	case cities.AttributeImports:
+		label = cities.AttributeImportsShort
 		imports, err := strconv.ParseFloat(values, 64)
 		if err == nil {
 			values = FormatLargeNumber(imports) + "$"
 		}
-	case attributeUnemployment:
-		label = attributeUnemploymentShort
+	case cities.AttributeUnemployment:
+		label = cities.AttributeUnemploymentShort
 		values += "%"
-	case attributeIndividualsUsingInternet:
-		label = attributeIndividualsUsingInternetShort
+	case cities.AttributeIndividualsUsingInternet:
+		label = cities.AttributeIndividualsUsingInternetShort
 		values += "%"
-	case attributeTaxRevenue:
-		label = attributeTaxRevenueShort
+	case cities.AttributeTaxRevenue:
+		label = cities.AttributeTaxRevenueShort
 		values += "% of GDP"
-	case attributeLifeExpectancy:
-		label = attributeLifeExpectancyShort
+	case cities.AttributeLifeExpectancy:
+		label = cities.AttributeLifeExpectancyShort
 		values += " years"
-	case attributeMortalityRateUnder5:
-		label = attributeMortalityRateUnder5Short
+	case cities.AttributeMortalityRateUnder5:
+		label = cities.AttributeMortalityRateUnder5Short
 		values += " per 1000"
-	case attributeGovtExpenditureEducation:
-		label = attributeGovtExpenditureEducationShort
+	case cities.AttributeGovtExpenditureEducation:
+		label = cities.AttributeGovtExpenditureEducationShort
 		values += "% of GDP"
-	case attributeCO2Emissions:
-		label = attributeCO2EmissionsShort
+	case cities.AttributeCO2Emissions:
+		label = cities.AttributeCO2EmissionsShort
 		values += " tons per capita"
-	case attributeLiteracyRate:
-		label = attributeLiteracyRateShort
+	case cities.AttributeLiteracyRate:
+		label = cities.AttributeLiteracyRateShort
 		values += "%"
-	case attributeCurrentHealthExpenditure:
-		label = attributeCurrentHealthExpenditureShort
+	case cities.AttributeCurrentHealthExpenditure:
+		label = cities.AttributeCurrentHealthExpenditureShort
 		values += "% of GDP"
-	case attributeHealthExpenditurePerCapita:
-		label = attributeHealthExpenditurePerCapitaShort
+	case cities.AttributeHealthExpenditurePerCapita:
+		label = cities.AttributeHealthExpenditurePerCapitaShort
 		values += "$"
-	case attributePovertyHeadcount:
-		label = attributePovertyHeadcountShort
+	case cities.AttributePovertyHeadcount:
+		label = cities.AttributePovertyHeadcountShort
 		values += "%"
 	default:
 		return formatAttributeResult{}, false

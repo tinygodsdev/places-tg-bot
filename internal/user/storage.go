@@ -78,10 +78,11 @@ func (s *mongoStorage) GetUserByID(ctx context.Context, id string) (*User, error
 	err := collection.FindOne(ctx, filter).Decode(&u)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, nil // user not found
+			return nil, nil
 		}
 		return nil, fmt.Errorf("failed to get user: %w", err)
 	}
+
 	return &u, nil
 }
 
@@ -97,6 +98,7 @@ func (s *mongoStorage) SaveOrUpdateUser(ctx context.Context, u *User) error {
 	if err != nil {
 		return fmt.Errorf("failed to save or update user: %w", err)
 	}
+
 	return nil
 }
 

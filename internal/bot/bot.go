@@ -146,60 +146,58 @@ func (b *Bot) getHandler(name string, fn func(tele.Context) error) tele.HandlerF
 			unique = c.Callback().Unique
 		}
 
-		go func() {
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
 
-			if c.Sender() == nil {
-				b.log.Error("sender is nil", "callback", unique)
-				return
+		if c.Sender() == nil {
+			b.log.Error("sender is nil", "callback", unique)
+			return nil
+		}
+
+		b.mu.Lock()
+		defer b.mu.Unlock()
+
+		usr, err := b.userStore.GetUserByID(ctx, fmt.Sprint(c.Sender().ID))
+		if err != nil {
+			b.log.Error("failed to get user", "error", err, "request_id", requestID)
+		}
+		if usr == nil {
+			if err := b.userStore.SaveOrUpdateUser(ctx, &user.User{
+				ID:        fmt.Sprint(c.Sender().ID),
+				FirstName: c.Sender().FirstName,
+				LastName:  c.Sender().LastName,
+				Username:  c.Sender().Username,
+			}); err != nil {
+				b.log.Error("failed to save user", "error", err, "request_id", requestID)
+				return nil
 			}
-
-			b.mu.Lock()
-			defer b.mu.Unlock()
-
-			usr, err := b.userStore.GetUserByID(ctx, fmt.Sprint(c.Sender().ID))
-			if err != nil {
-				b.log.Error("failed to get user", "error", err, "request_id", requestID)
+		} else {
+			usr.FirstName = c.Sender().FirstName
+			usr.LastName = c.Sender().LastName
+			usr.Username = c.Sender().Username
+			if err := b.userStore.SaveOrUpdateUser(ctx, usr); err != nil {
+				b.log.Error("failed to update user", "error", err, "request_id", requestID)
+				return nil
 			}
-			if usr == nil {
-				if err := b.userStore.SaveOrUpdateUser(ctx, &user.User{
-					ID:        fmt.Sprint(c.Sender().ID),
-					FirstName: c.Sender().FirstName,
-					LastName:  c.Sender().LastName,
-					Username:  c.Sender().Username,
-				}); err != nil {
-					b.log.Error("failed to save user", "error", err, "request_id", requestID)
-					return
-				}
-			} else {
-				usr.FirstName = c.Sender().FirstName
-				usr.LastName = c.Sender().LastName
-				usr.Username = c.Sender().Username
-				if err := b.userStore.SaveOrUpdateUser(ctx, usr); err != nil {
-					b.log.Error("failed to update user", "error", err, "request_id", requestID)
-					return
-				}
-			}
+		}
 
-			actionLog := &user.UserActionLog{
-				UserID: fmt.Sprint(c.Sender().ID),
-				Action: name,
-				Details: map[string]interface{}{
-					"request_id": requestID,
-					"callback":   unique,
-					"text":       c.Message().Text,
-					"data":       c.Data(),
-				},
-			}
+		actionLog := &user.UserActionLog{
+			UserID: fmt.Sprint(c.Sender().ID),
+			Action: name,
+			Details: map[string]interface{}{
+				"request_id": requestID,
+				"callback":   unique,
+				"text":       c.Message().Text,
+				"data":       c.Data(),
+			},
+		}
 
-			if err := b.userStore.LogUserAction(ctx, actionLog); err != nil {
-				b.log.Error("failed to log user action", "error", err, "request_id", requestID)
-				return
-			}
+		if err := b.userStore.LogUserAction(ctx, actionLog); err != nil {
+			b.log.Error("failed to log user action", "error", err, "request_id", requestID)
+			return nil
+		}
 
-			b.log.Info("user input saved", "id", c.Sender().ID)
-		}()
+		b.log.Info("user input saved", "id", c.Sender().ID)
 
 		recipient := c.Recipient().Recipient()
 		if b.cfg.Env == "dev" {

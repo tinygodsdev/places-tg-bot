@@ -87,7 +87,7 @@ func (b *Bot) handleReportCities(c tele.Context) error {
 
 	tags, err := b.placesClient.GetTags(context.TODO(), data.Filter{
 		From: time.Now().Add(-24 * time.Hour),
-		To:   time.Now(),
+		To:   time.Now().Add(1 * time.Minute),
 	})
 	if err != nil {
 		return err
@@ -142,12 +142,9 @@ func (b *Bot) handleReportCitiesCallback(c tele.Context) error {
 		return c.Send("Failed to get user profile")
 	}
 
-	// Добавить или удалить город из списка предпочтений
 	if util.ContainsString(user.Preferences.ReportCities, city) {
-		// Удалить город
 		user.Preferences.ReportCities = util.RemoveString(user.Preferences.ReportCities, city)
 	} else {
-		// Добавить город
 		user.Preferences.ReportCities = append(user.Preferences.ReportCities, city)
 	}
 
@@ -161,6 +158,5 @@ func (b *Bot) handleReportCitiesCallback(c tele.Context) error {
 		b.log.Error("failed to delete message", "error", err)
 	}
 
-	// Обновить сообщение с выбором
 	return b.handleReportCities(c)
 }

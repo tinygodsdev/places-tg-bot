@@ -1,6 +1,10 @@
 package formatter
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/tinygodsdev/cities/cities"
+)
 
 func formatAirQualityAttribute(label string, values string, comment string) (formatAttributeResult, bool) {
 	var emoji string
@@ -12,7 +16,7 @@ func formatAirQualityAttribute(label string, values string, comment string) (for
 	}
 
 	switch label {
-	case attributeCo:
+	case cities.AttributeCo:
 		switch {
 		case value > 200:
 			emoji = skullEmoji
@@ -23,7 +27,7 @@ func formatAirQualityAttribute(label string, values string, comment string) (for
 		default:
 			emoji = ""
 		}
-	case attributeNo2:
+	case cities.AttributeNo2:
 		switch {
 		case value >= 101:
 			emoji = skullEmoji
@@ -34,7 +38,7 @@ func formatAirQualityAttribute(label string, values string, comment string) (for
 		default:
 			emoji = ""
 		}
-	case attributeO3:
+	case cities.AttributeO3:
 		switch {
 		case value >= 100:
 			emoji = skullEmoji
@@ -45,7 +49,7 @@ func formatAirQualityAttribute(label string, values string, comment string) (for
 		default:
 			emoji = ""
 		}
-	case attributePm10:
+	case cities.AttributePm10:
 		switch {
 		case value >= 51:
 			emoji = skullEmoji
@@ -56,7 +60,7 @@ func formatAirQualityAttribute(label string, values string, comment string) (for
 		default:
 			emoji = ""
 		}
-	case attributePm25:
+	case cities.AttributePm25:
 		switch {
 		case value >= 26:
 			emoji = skullEmoji
@@ -67,7 +71,7 @@ func formatAirQualityAttribute(label string, values string, comment string) (for
 		default:
 			emoji = ""
 		}
-	case attributeSo2:
+	case cities.AttributeSo2:
 		switch {
 		case value >= 76:
 			emoji = skullEmoji

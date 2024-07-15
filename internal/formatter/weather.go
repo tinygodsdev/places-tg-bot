@@ -3,6 +3,8 @@ package formatter
 import (
 	"strconv"
 	"strings"
+
+	"github.com/tinygodsdev/cities/cities"
 )
 
 func formatWeatherAttribute(label string, values string, comment string) (formatAttributeResult, bool) {
@@ -10,7 +12,7 @@ func formatWeatherAttribute(label string, values string, comment string) (format
 	var subgroup string
 	var order int
 	switch label {
-	case attributeTemperature:
+	case cities.AttributeTemperature:
 		temp, err := strconv.ParseFloat(values, 64)
 		if err == nil {
 			switch {
@@ -29,7 +31,7 @@ func formatWeatherAttribute(label string, values string, comment string) (format
 			}
 			values += "°"
 		}
-	case attributeHumidity:
+	case cities.AttributeHumidity:
 		hum, err := strconv.ParseFloat(values, 64)
 		if err == nil {
 			if hum > 80 {
@@ -41,7 +43,7 @@ func formatWeatherAttribute(label string, values string, comment string) (format
 			}
 			values += "%"
 		}
-	case attributePressure:
+	case cities.AttributePressure:
 		press, err := strconv.ParseFloat(values, 64)
 		if err == nil {
 			switch {
@@ -54,7 +56,7 @@ func formatWeatherAttribute(label string, values string, comment string) (format
 			}
 			values += " hPa"
 		}
-	case attributeDescription:
+	case cities.AttributeDescription:
 		if strings.Contains(values, "cloud") {
 			emoji = cloudyEmoji
 		} else if strings.Contains(values, "clear") {

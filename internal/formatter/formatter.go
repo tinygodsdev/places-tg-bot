@@ -6,12 +6,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tinygodsdev/cities/cities"
 	"github.com/tinygodsdev/datasdk/pkg/citycountry"
 	"github.com/tinygodsdev/datasdk/pkg/data"
 	tele "gopkg.in/telebot.v3"
 )
 
-var categoryOrder = []string{catergoryWeather, catergoryAirQuality, categoryPrices, categoryWorldBank}
+var categoryOrder = []string{cities.CategoryWeather, cities.CategoryAirQuality, cities.CategoryPrices, cities.CategoryWorldBank}
 
 type formatAttributeResult struct {
 	attribute string
@@ -22,40 +23,40 @@ type formatAttributeResult struct {
 func getSkipLabels() map[string]struct{} {
 	return map[string]struct{}{
 		// world bank
-		attributeCO2Emissions:               {},
-		attributeHealthExpenditurePerCapita: {},
+		cities.AttributeCO2Emissions:               {},
+		cities.AttributeHealthExpenditurePerCapita: {},
 		// prices
-		attributeMenLeatherBusinessShoes:         {},
-		attributeNikeRunningShoes:                {},
-		attributeSummerDressChainStore:           {},
-		attributeCinemaSeat:                      {},
-		attributeTaxi1HourWaiting:                {},
-		attributeToyotaCorolla:                   {},
-		attributeVolkswagenGolf:                  {},
-		attributeWaterSmallBottle:                {},
-		attributeLettuce:                         {},
-		attributeTennisCourtRent:                 {},
-		attributeTaxiStart:                       {},
-		attributeDomesticBeerPint:                {},
-		attributeImportedBeer:                    {},
-		attributeCokePepsi:                       {},
-		attributeRice:                            {},
-		attributeOnion:                           {},
-		attributeFitnessClubFee:                  {},
-		attributeApartment3BedroomsOutsideCentre: {},
-		attributeApartment3BedroomsCityCentre:    {},
-		attributeMealInexpensiveRestaurant:       {},
-		attributePricePerSqFtOutsideCentre:       {},
-		attributePricePerSqFtCityCentre:          {},
-		attributeCigarettes:                      {},
-		attributeOranges:                         {},
-		attributeTomato:                          {},
-		attributeWaterBottle:                     {},
-		attributePairOfJeans:                     {},
-		attributeMotto:                           {},
+		cities.AttributeMenLeatherBusinessShoes:         {},
+		cities.AttributeNikeRunningShoes:                {},
+		cities.AttributeSummerDressChainStore:           {},
+		cities.AttributeCinemaSeat:                      {},
+		cities.AttributeTaxi1HourWaiting:                {},
+		cities.AttributeToyotaCorolla:                   {},
+		cities.AttributeVolkswagenGolf:                  {},
+		cities.AttributeWaterSmallBottle:                {},
+		cities.AttributeLettuce:                         {},
+		cities.AttributeTennisCourtRent:                 {},
+		cities.AttributeTaxiStart:                       {},
+		cities.AttributeDomesticBeerPint:                {},
+		cities.AttributeImportedBeer:                    {},
+		cities.AttributeCokePepsi:                       {},
+		cities.AttributeRice:                            {},
+		cities.AttributeOnion:                           {},
+		cities.AttributeFitnessClubFee:                  {},
+		cities.AttributeApartment3BedroomsOutsideCentre: {},
+		cities.AttributeApartment3BedroomsCityCentre:    {},
+		cities.AttributeMealInexpensiveRestaurant:       {},
+		cities.AttributePricePerSqFtOutsideCentre:       {},
+		cities.AttributePricePerSqFtCityCentre:          {},
+		cities.AttributeCigarettes:                      {},
+		cities.AttributeOranges:                         {},
+		cities.AttributeTomato:                          {},
+		cities.AttributeWaterBottle:                     {},
+		cities.AttributePairOfJeans:                     {},
+		cities.AttributeMotto:                           {},
 		// info
-		attributeAreaTotal: {},
-		attributeTimezone:  {},
+		cities.AttributeAreaTotal: {},
+		cities.AttributeTimezone:  {},
 	}
 }
 
@@ -70,14 +71,14 @@ func FormatCitiesReport(points []data.Point) []string {
 		}
 
 		var cityInfo string
-		infoAttrs, ok := categories[categoryInfo]
+		infoAttrs, ok := categories[cities.CategoryInfo]
 		if ok {
 			cityInfo = "\n" + formatCityInfo(infoAttrs)
 		}
 
 		messages = append(
 			messages,
-			Bold(city)+flag+" "+getMotto(categories[categoryInfo])+cityInfo,
+			Bold(city)+flag+" "+getMotto(categories[cities.CategoryInfo])+cityInfo,
 		)
 
 		for _, category := range categoryOrder {
@@ -97,7 +98,7 @@ func formatCityInfo(attrs []data.Attribute) string {
 }
 
 func getMotto(attrs []data.Attribute) string {
-	motto := findAttributeByLabel(attrs, attributeMotto)
+	motto := findAttributeByLabel(attrs, cities.AttributeMotto)
 	if len(motto.Values) != 0 {
 		return Italic(motto.Values[0])
 	}
@@ -256,18 +257,18 @@ func formatSingleAttribute(label, values, emoji, comment string) string {
 
 func formatCatergoryTitle(category, city string) string {
 	switch category {
-	case catergoryWeather:
+	case cities.CategoryWeather:
 		return formatSingleCategoryTitle("Weather") + " " + weatherEmoji
-	case catergoryAirQuality:
+	case cities.CategoryAirQuality:
 		return formatSingleCategoryTitle("Air Quality") + " " + airEmoji
-	case categoryWorldBank:
+	case cities.CategoryWorldBank:
 		title := "National Economy"
 		flag, ok := citycountry.GetFlagByCity(city)
 		if ok {
 			return formatSingleCategoryTitle(title) + " " + flag
 		}
 		return formatSingleCategoryTitle(title) + " " + stonksEmoji
-	case categoryPrices:
+	case cities.CategoryPrices:
 		return formatSingleCategoryTitle("Prices") + " " + dollarEmoji
 	default:
 		return formatSingleCategoryTitle(category)

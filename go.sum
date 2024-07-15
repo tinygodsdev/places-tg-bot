@@ -445,6 +445,8 @@ github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8
 github.com/subosito/gotenv v1.4.1/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
 github.com/testcontainers/testcontainers-go v0.31.0 h1:W0VwIhcEVhRflwL9as3dhY6jXjVCA27AkmbnZ+UTh3U=
 github.com/testcontainers/testcontainers-go v0.31.0/go.mod h1:D2lAoA0zUFiSY+eAflqK5mcUx/A5hrrORaEQrd0SefI=
+github.com/tinygodsdev/cities v0.0.0-20240715190351-240bce90aaf8 h1:7TA4fnE9ExbjZ7MjfjuaCr/NCUNATJJ7Q2FPB5+BxYc=
+github.com/tinygodsdev/cities v0.0.0-20240715190351-240bce90aaf8/go.mod h1:HyNZsll41pICsIrPpUrC92t9AOmAhFrEH3xvpk+BQ/U=
 github.com/tinygodsdev/datasdk v0.0.0-20240703235246-25f20adfd7df h1:GtK6ny8NqoqUuTe2HrhnRVhdq8OHW1l7KLYFwkmL4r4=
 github.com/tinygodsdev/datasdk v0.0.0-20240703235246-25f20adfd7df/go.mod h1:0WZvZ+AuK+awK59opjklPZdpWWTRVy/D0aSv/XFvoy8=
 github.com/tinygodsdev/datasdk v0.0.0-20240704231021-5c2465e40117 h1:r95S0kjAcyhmOUKXWPkq4CxSQmhS0MH9/Mtv6HZjBtc=

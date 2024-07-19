@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/tinygodsdev/cities/pkg/cities"
 	"github.com/tinygodsdev/datasdk/pkg/data"
 )
 
@@ -31,7 +32,7 @@ func (b *Bot) fetchCitiesData(input fetchCitiesDataInput) (*fetchCitiesDataOutpu
 	var filterTags []data.Tag
 	if input.city != "" {
 		filterTags = append(filterTags, data.Tag{
-			Label: TagCity,
+			Label: cities.TagCity,
 			Value: input.city,
 		})
 	}
@@ -45,7 +46,7 @@ func (b *Bot) fetchCitiesData(input fetchCitiesDataInput) (*fetchCitiesDataOutpu
 			Tags: filterTags,
 		},
 		data.Group{
-			TagLabels: []string{TagCity},
+			TagLabels: []string{cities.TagCity},
 		},
 	)
 	if err != nil {

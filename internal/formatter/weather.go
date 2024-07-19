@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tinygodsdev/cities/cities"
+	"github.com/tinygodsdev/cities/pkg/cities"
 )
 
 func formatWeatherAttribute(label string, values string, comment string) (formatAttributeResult, bool) {

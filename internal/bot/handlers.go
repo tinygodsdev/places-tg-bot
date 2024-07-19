@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tinygodsdev/cities/pkg/cities"
+	"github.com/tinygodsdev/datasdk/pkg/bot/format"
 	"github.com/tinygodsdev/datasdk/pkg/data"
 	"github.com/tinygodsdev/places-tg-bot/internal/formatter"
 	tele "gopkg.in/telebot.v3"
@@ -42,6 +44,7 @@ func (b *Bot) handleCitiesCallback(c tele.Context) error {
 }
 
 func (b *Bot) handleCities(c tele.Context) error {
+	f := format.New(format.ModeHTML)
 	tags, err := b.placesClient.GetTags(context.TODO(), data.Filter{
 		From: time.Now().Add(-24 * time.Hour),
 		To:   time.Now(),
@@ -50,14 +53,14 @@ func (b *Bot) handleCities(c tele.Context) error {
 		return err
 	}
 
-	var cities []string
+	var citiesStrs []string
 	for _, tag := range tags {
-		if tag.Label == TagCity {
-			cities = append(cities, tag.Value)
+		if tag.Label == cities.TagCity {
+			citiesStrs = append(citiesStrs, tag.Value)
 		}
 	}
 
-	sort.Strings(cities)
+	sort.Strings(citiesStrs)
 
 	r := &tele.ReplyMarkup{
 		ResizeKeyboard:  true,
@@ -66,8 +69,8 @@ func (b *Bot) handleCities(c tele.Context) error {
 
 	const buttonsPerRow = 3
 	var btns []tele.Btn
-	for _, city := range cities {
-		btns = append(btns, r.Data(formatter.Capitalize(city), callbackCity, city))
+	for _, city := range citiesStrs {
+		btns = append(btns, r.Data(f.Capitalize(city), callbackCity, city))
 	}
 
 	var rows []tele.Row

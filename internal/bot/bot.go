@@ -23,9 +23,6 @@ const (
 	CommandSchedule     = "/schedule"
 	CommandReportCities = "/report_cities"
 
-	TagCategory = "category"
-	TagCity     = "city"
-
 	callbackCity         = "city_callback"
 	callbackSchedule     = "schedule_callback"
 	callbackReportCities = "report_cities_callback"

@@ -1,6 +1,6 @@
 package formatter
 
-import "github.com/tinygodsdev/cities/cities"
+import "github.com/tinygodsdev/cities/pkg/cities"
 
 func formatGeneralInfoAttribute(label string, values string, comment string) (formatAttributeResult, bool) {
 	var emoji string

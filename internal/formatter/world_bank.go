@@ -3,13 +3,15 @@ package formatter
 import (
 	"strconv"
 
-	"github.com/tinygodsdev/cities/cities"
+	"github.com/tinygodsdev/cities/pkg/cities"
+	"github.com/tinygodsdev/datasdk/pkg/bot/format"
 )
 
 func formatWorldBankAttribute(label string, values string, comment string) (formatAttributeResult, bool) {
 	var emoji string
 	var subgroup string
 	var order int
+	f := format.New(format.ModeHTML)
 	switch label {
 	case cities.AttributeCPI:
 		label = cities.AttributeCPIShort
@@ -42,13 +44,13 @@ func formatWorldBankAttribute(label string, values string, comment string) (form
 		label = cities.AttributeExportsShort
 		exports, err := strconv.ParseFloat(values, 64)
 		if err == nil {
-			values = FormatLargeNumber(exports) + "$"
+			values = f.FormatLargeNumber(exports) + "$"
 		}
 	case cities.AttributeImports:
 		label = cities.AttributeImportsShort
 		imports, err := strconv.ParseFloat(values, 64)
 		if err == nil {
-			values = FormatLargeNumber(imports) + "$"
+			values = f.FormatLargeNumber(imports) + "$"
 		}
 	case cities.AttributeUnemployment:
 		label = cities.AttributeUnemploymentShort

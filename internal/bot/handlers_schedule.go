@@ -6,8 +6,9 @@ import (
 	"sort"
 	"time"
 
+	"github.com/tinygodsdev/cities/pkg/cities"
+	"github.com/tinygodsdev/datasdk/pkg/bot/format"
 	"github.com/tinygodsdev/datasdk/pkg/data"
-	"github.com/tinygodsdev/places-tg-bot/internal/formatter"
 	"github.com/tinygodsdev/places-tg-bot/internal/util"
 	tele "gopkg.in/telebot.v3"
 )
@@ -78,6 +79,7 @@ func (b *Bot) handleSchedule(c tele.Context) error {
 }
 
 func (b *Bot) handleReportCities(c tele.Context) error {
+	f := format.New(format.ModeHTML)
 	userID := c.Sender().ID
 	user, err := b.userStore.GetUserByID(context.TODO(), fmt.Sprint(userID))
 	if err != nil {
@@ -93,14 +95,14 @@ func (b *Bot) handleReportCities(c tele.Context) error {
 		return err
 	}
 
-	var cities []string
+	var citiesStr []string
 	for _, tag := range tags {
-		if tag.Label == TagCity {
-			cities = append(cities, tag.Value)
+		if tag.Label == cities.TagCity {
+			citiesStr = append(citiesStr, tag.Value)
 		}
 	}
 
-	sort.Strings(cities)
+	sort.Strings(citiesStr)
 
 	r := &tele.ReplyMarkup{
 		ResizeKeyboard:  true,
@@ -108,13 +110,13 @@ func (b *Bot) handleReportCities(c tele.Context) error {
 	}
 	const buttonsPerRow = 3
 	var btns []tele.Btn
-	for _, city := range cities {
-		cityText := formatter.Capitalize(city)
+	for _, city := range citiesStr {
+		cityText := f.Capitalize(city)
 		if util.ContainsString(user.Preferences.ReportCities, city) {
 			cityText = fmt.Sprintf("%s %s", cityText, selectedEmoji)
 		}
 
-		btns = append(btns, r.Data(formatter.Capitalize(cityText), callbackReportCities, city))
+		btns = append(btns, r.Data(f.Capitalize(cityText), callbackReportCities, city))
 	}
 
 	var rows []tele.Row

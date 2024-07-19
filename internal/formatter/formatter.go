@@ -6,7 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tinygodsdev/cities/cities"
+	"github.com/tinygodsdev/cities/pkg/cities"
+	"github.com/tinygodsdev/datasdk/pkg/bot/format"
 	"github.com/tinygodsdev/datasdk/pkg/citycountry"
 	"github.com/tinygodsdev/datasdk/pkg/data"
 	tele "gopkg.in/telebot.v3"
@@ -78,7 +79,7 @@ func FormatCitiesReport(points []data.Point) []string {
 
 		messages = append(
 			messages,
-			Bold(city)+flag+" "+getMotto(categories[cities.CategoryInfo])+cityInfo,
+			format.New(format.ModeHTML).Bold(city)+flag+" "+getMotto(categories[cities.CategoryInfo])+cityInfo,
 		)
 
 		for _, category := range categoryOrder {
@@ -100,7 +101,7 @@ func formatCityInfo(attrs []data.Attribute) string {
 func getMotto(attrs []data.Attribute) string {
 	motto := findAttributeByLabel(attrs, cities.AttributeMotto)
 	if len(motto.Values) != 0 {
-		return Italic(motto.Values[0])
+		return format.New(format.ModeHTML).Italic(motto.Values[0])
 	}
 	return ""
 }
@@ -121,15 +122,15 @@ func FormatSources(sources []data.Source) string {
 	}
 	sort.Strings(names)
 
-	return fmt.Sprintf("%s: %s", Bold("Sources"), strings.Join(names, ", "))
+	return fmt.Sprintf("%s: %s", format.New(format.ModeHTML).Bold("Sources"), strings.Join(names, ", "))
 }
 
 func FormatFetchDuration(d time.Duration) string {
-	return Italic(fmt.Sprintf("Fetched in %s", d))
+	return format.New(format.ModeHTML).Italic(fmt.Sprintf("Fetched in %s", d))
 }
 
 func FormatProvider() string {
-	return "By " + Underline(provider)
+	return "By " + format.New(format.ModeHTML).Underline(provider)
 }
 
 func FormatDeveloperPlain() string {
@@ -207,7 +208,7 @@ func formatCityAttributes(attributes []data.Attribute, skipLabels map[string]str
 		}
 
 		if subgroup != noSubgroup {
-			formattedResult = append(formattedResult, prefix+Underline(subgroup)+suffix)
+			formattedResult = append(formattedResult, prefix+format.New(format.ModeHTML).Underline(subgroup)+suffix)
 		}
 
 		for _, r := range subgroupMap[subgroup] {
@@ -216,7 +217,7 @@ func formatCityAttributes(attributes []data.Attribute, skipLabels map[string]str
 	}
 
 	if !latestTime.IsZero() && !skipTs {
-		formattedResult = append(formattedResult, Italic(fmt.Sprintf("updated at %s", latestTime.Format("2006-01-02 15:04"))))
+		formattedResult = append(formattedResult, format.New(format.ModeHTML).Italic(fmt.Sprintf("updated at %s", latestTime.Format("2006-01-02 15:04"))))
 	}
 	return strings.Join(formattedResult, "\n")
 }
@@ -252,7 +253,8 @@ func formatSingleAttribute(label, values, emoji, comment string) string {
 	if comment != "" {
 		comment = " (" + comment + ")"
 	}
-	return fmt.Sprintf("%s: %s%s %s", Capitalize(label), Bold(values), Italic(comment), emoji)
+	f := format.New(format.ModeHTML)
+	return fmt.Sprintf("%s: %s%s %s", f.Capitalize(label), f.Bold(values), f.Italic(comment), emoji)
 }
 
 func formatCatergoryTitle(category, city string) string {
@@ -276,14 +278,16 @@ func formatCatergoryTitle(category, city string) string {
 }
 
 func formatSingleCategoryTitle(category string) string {
-	return Bold(Upper((category)))
+	f := format.New(format.ModeHTML)
+	return f.Bold(f.Upper((category)))
 }
 
 func FormatCityList(cities []string) string {
 	var formattedCities []string
+	f := format.New(format.ModeHTML)
 	for _, c := range cities {
 		formattedCities = append(formattedCities,
-			Capitalize(c),
+			f.Capitalize(c),
 		)
 	}
 

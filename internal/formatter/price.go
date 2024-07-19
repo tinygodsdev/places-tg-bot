@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/tinygodsdev/cities/cities"
+	"github.com/tinygodsdev/cities/pkg/cities"
 	"github.com/tinygodsdev/places-tg-bot/internal/util"
 )
 

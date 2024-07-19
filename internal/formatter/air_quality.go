@@ -3,7 +3,7 @@ package formatter
 import (
 	"strconv"
 
-	"github.com/tinygodsdev/cities/cities"
+	"github.com/tinygodsdev/cities/pkg/cities"
 )
 
 func formatAirQualityAttribute(label string, values string, comment string) (formatAttributeResult, bool) {
